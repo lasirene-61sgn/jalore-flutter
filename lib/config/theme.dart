@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Vibrant Blue Gradient Color Scheme
-  static const Color primaryBlue = Color(0xFF5B7FE8); // Bright Blue
-  static const Color secondaryBlue = Color(0xFF6B8FF3); // Light Blue
-  static const Color darkBlue = Color(0xFF4A6FD7); // Dark Blue
-  static const Color gradientStart = Color(0xFF6B8FF3); // Gradient Start
-  static const Color gradientEnd = Color(0xFF5B7FE8); // Gradient End
+  // Color Scheme from New Logo
+  static const Color primaryBlue = Color(0xFF1E90FF); // DodgerBlue from logo (Main)
+  static const Color secondaryBlue = Color(0xFF4DA6FF); // Lighter DodgerBlue
+  static const Color darkBlue = Color(0xFF1873CC); // Darker DodgerBlue
+  static const Color accentOrange = Color(0xFFFF8C00); // DarkOrange from logo background
+  static const Color lightOrange = Color(0xFFFFA733); // Light Orange Accent
+  static const Color gradientStart = Color(0xFF4DA6FF); // Blue Gradient Start
+  static const Color gradientEnd = Color(0xFF1E90FF); // Blue Gradient End
   static const Color backgroundWhite = Color(0xFFFFFFFF); // Pure White
-  static const Color backgroundGrey = Color(0xFFF8F9FA); // Light Grey
+  static const Color backgroundGrey = Color(0xFFF5F7FA); // Light Blue-Grey Tint
   static const Color textDark = Color(0xFF212121); // Dark Text
   static const Color textGrey = Color(0xFF757575); // Grey Text
-  static const Color dividerGrey = Color(0xFFE0E0E0); // Divider
+  static const Color dividerGrey = Color(0xFFE3E8EF); // Light Blue-Grey Divider
+  static const Color ssjsSecondaryBlue = Color(0xFFA4BBE7); // Light Blue-Grey Divider
+  static const Color ssjsPrimaryBlue = Color(0xFF284A8A); // Light Blue-Grey Divider
+
+  // Legacy color aliases for backward compatibility
+  static const Color primaryOrange = accentOrange;
+  static const Color secondaryOrange = lightOrange;
+  static const Color darkOrange = accentOrange;
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -19,7 +28,7 @@ class AppTheme {
       scaffoldBackgroundColor: backgroundWhite,
       colorScheme: const ColorScheme.light(
         primary: primaryBlue,
-        secondary: secondaryBlue,
+        secondary: accentOrange,
         surface: backgroundWhite,
         error: Color(0xFFD32F2F),
       ),

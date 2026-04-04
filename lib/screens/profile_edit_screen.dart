@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/members/model/member_model.dart';
 import 'package:intl/intl.dart';
 import '../config/theme.dart';
-import '../models/member.dart';
-import '../services/data_service.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   final Member member;
@@ -38,14 +37,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _emailController = TextEditingController(text: widget.member.email);
     _fatherNameController = TextEditingController(text: widget.member.fatherName);
     _businessTypeController = TextEditingController(text: widget.member.businessType);
-    _businessProductsController = TextEditingController(text: widget.member.businessProducts);
+    _businessProductsController = TextEditingController(text: widget.member.productService);
     _officeAddressController = TextEditingController(text: widget.member.officeAddress);
     _ageController = TextEditingController(text: widget.member.age?.toString());
     _educationController = TextEditingController(text: widget.member.education);
     
     _selectedGender = widget.member.gender;
     _selectedDateOfBirth = widget.member.dateOfBirth;
-    _selectedDateOfAnniversary = widget.member.dateOfAnniversary;
+    _selectedDateOfAnniversary = widget.member.anniversaryDate;
   }
 
   @override
@@ -82,56 +81,56 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     }
   }
 
-  Future<void> _saveProfile() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    setState(() {
-      _isSaving = true;
-    });
-
-    try {
-      final updatedMember = Member(
-        id: widget.member.id,
-        name: _nameController.text,
-        mobile: _mobileController.text,
-        email: _emailController.text.isNotEmpty ? _emailController.text : null,
-        fatherName: _fatherNameController.text.isNotEmpty ? _fatherNameController.text : null,
-        businessType: _businessTypeController.text.isNotEmpty ? _businessTypeController.text : null,
-        businessProducts: _businessProductsController.text.isNotEmpty ? _businessProductsController.text : null,
-        officeAddress: _officeAddressController.text.isNotEmpty ? _officeAddressController.text : null,
-        gender: _selectedGender,
-        age: _ageController.text.isNotEmpty ? int.tryParse(_ageController.text) : null,
-        education: _educationController.text.isNotEmpty ? _educationController.text : null,
-        dateOfBirth: _selectedDateOfBirth,
-        dateOfAnniversary: _selectedDateOfAnniversary,
-        familyImageUrl: widget.member.familyImageUrl,
-        profileImageUrl: widget.member.profileImageUrl,
-      );
-
-      await DataService.saveMember(updatedMember);
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully')),
-        );
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving profile: $e')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isSaving = false;
-        });
-      }
-    }
-  }
+  // Future<void> _saveProfile() async {
+  //   if (!_formKey.currentState!.validate()) {
+  //     return;
+  //   }
+  //
+  //   setState(() {
+  //     _isSaving = true;
+  //   });
+  //
+  //   try {
+  //     final updatedMember = Member(
+  //       id: widget.member.id,
+  //       name: _nameController.text,
+  //       mobile: _mobileController.text,
+  //       email: _emailController.text.isNotEmpty ? _emailController.text : null,
+  //       fatherName: _fatherNameController.text.isNotEmpty ? _fatherNameController.text : null,
+  //       businessType: _businessTypeController.text.isNotEmpty ? _businessTypeController.text : null,
+  //       businessProducts: _businessProductsController.text.isNotEmpty ? _businessProductsController.text : null,
+  //       officeAddress: _officeAddressController.text.isNotEmpty ? _officeAddressController.text : null,
+  //       gender: _selectedGender,
+  //       age: _ageController.text.isNotEmpty ? int.tryParse(_ageController.text) : null,
+  //       education: _educationController.text.isNotEmpty ? _educationController.text : null,
+  //       dateOfBirth: _selectedDateOfBirth,
+  //       dateOfAnniversary: _selectedDateOfAnniversary,
+  //       familyImageUrl: widget.member.familyImageUrl,
+  //       profileImageUrl: widget.member.profileImageUrl,
+  //     );
+  //
+  //     await DataService.saveMember(updatedMember);
+  //
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Profile updated successfully')),
+  //       );
+  //       Navigator.pop(context);
+  //     }
+  //   } catch (e) {
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Error saving profile: $e')),
+  //       );
+  //     }
+  //   } finally {
+  //     if (mounted) {
+  //       setState(() {
+  //         _isSaving = false;
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +155,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           else
             IconButton(
               icon: const Icon(Icons.check),
-              onPressed: _saveProfile,
+              onPressed: (){},
             ),
         ],
       ),
@@ -383,7 +382,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _isSaving ? null : _saveProfile,
+                    onPressed: _isSaving ? null : (){},
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: _isSaving

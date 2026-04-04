@@ -8,6 +8,7 @@ class HelplineScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor:AppTheme.ssjsSecondaryBlue,
         title: const Text('HelpLine'),
       ),
       body: SafeArea(
@@ -62,7 +63,7 @@ class HelplineScreen extends StatelessWidget {
             _buildServiceCard(
               context,
               title: 'Financial Help',
-              description: 'Financial assistance for members',
+              description: 'Financial assistance for help_support',
               icon: Icons.account_balance,
             ),
             _buildServiceCard(

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "992878145244",
+    "project_id": "jalore-d7dc0",
+    "storage_bucket": "jalore-d7dc0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992878145244:android:e1e72a279f1f74b84bce19",
+        "android_client_info": {
+          "package_name": "com.sjjs.sjjs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv3LBRo2VqjldjEXDR1d7F40YDhkqGKsc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992878145244:android:5e3e7432f3002d824bce19",
+        "android_client_info": {
+          "package_name": "com.jalore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv3LBRo2VqjldjEXDR1d7F40YDhkqGKsc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../config/theme.dart';
-import '../models/member.dart';
-import 'profile_edit_screen.dart';
+import '../screens/members/model/member_model.dart';
+import 'profile/ui/profile_edit_screen.dart';
 
 class MemberDetailScreen extends StatelessWidget {
   final Member member;
@@ -14,19 +15,20 @@ class MemberDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(member.name),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfileEditScreen(member: member),
-                ),
-              );
-            },
-          ),
-        ],
+        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.edit),
+        //     onPressed: () {
+        //       // Navigator.push(
+        //       //   context,
+        //       //   MaterialPageRoute(
+        //       //     builder: (context) => ProfileEditScreen(member: member),
+        //       //   ),
+        //       // );
+        //     },
+        //   ),
+        // ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -48,10 +50,10 @@ class MemberDetailScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         border: Border.all(color: AppTheme.primaryBlue, width: 3),
                       ),
-                      child: member.profileImageUrl != null
+                      child: member.image != null
                           ? ClipOval(
                               child: Image.network(
-                                member.profileImageUrl!,
+                                member.image!,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Icon(
@@ -87,10 +89,8 @@ class MemberDetailScreen extends StatelessWidget {
                 children: [
                   if (member.mobile.isNotEmpty)
                     _buildInfoRow(context, 'Mobile', member.mobile, Icons.phone),
-                  if (member.secondaryMobile != null)
-                    _buildInfoRow(context, 'Secondary Mobile', member.secondaryMobile!, Icons.phone),
-                  if (member.email != null)
-                    _buildInfoRow(context, 'Email', member.email!, Icons.email),
+                  if (member.whatsapp != null)
+                    _buildInfoRow(context, 'Email', member.whatsapp!, Icons.email),
                 ],
               ),
 
@@ -111,91 +111,114 @@ class MemberDetailScreen extends StatelessWidget {
                     _buildInfoRow(
                       context,
                       'Date of Birth',
-                      DateFormat('dd MMM yyyy').format(member.dateOfBirth!),
+                      DateFormat('yyyy MMM dd').format(member.dateOfBirth!),
                       Icons.cake,
                     ),
-                  if (member.dateOfAnniversary != null)
+                  if (member.anniversaryDate != null)
                     _buildInfoRow(
                       context,
                       'Anniversary',
-                      DateFormat('dd MMM yyyy').format(member.dateOfAnniversary!),
+                      DateFormat('yyyy MMM dd').format(member.anniversaryDate!),
                       Icons.favorite,
                     ),
                 ],
               ),
 
-              // Business Information
-              if (member.businessType != null || member.businessProducts != null)
+              if (member.businessType != null)
                 _buildSection(
                   context,
                   title: 'Business Information',
                   children: [
                     if (member.businessType != null)
                       _buildInfoRow(context, 'Business Type', member.businessType!, Icons.business),
-                    if (member.businessProducts != null)
-                      _buildInfoRow(context, 'Products/Services', member.businessProducts!, Icons.inventory),
+                    if (member.productService != null)
+                      _buildInfoRow(context, 'Products/Services', member.productService!, Icons.inventory),
                   ],
                 ),
 
               // Address Information
-              if (member.officeAddress != null ||
-                  member.residenceAddress != null ||
-                  member.jaloreAddress != null)
+// Family Members Section
+              // Family Members Section (simple continuous style, no image)
+              // Family Members Section (full details, null-safe, no image)
+              if (member.familyMembers.isNotEmpty)
                 _buildSection(
                   context,
-                  title: 'Address Information',
-                  children: [
-                    if (member.officeAddress != null) ...[
-                      _buildInfoRow(context, 'Office Address', member.officeAddress!, Icons.location_city),
-                      if (member.officeNumber != null)
-                        _buildInfoRow(context, 'Office Number', member.officeNumber!, Icons.phone),
-                    ],
-                    if (member.residenceAddress != null) ...[
-                      _buildInfoRow(context, 'Residence Address', member.residenceAddress!, Icons.home),
-                      if (member.residenceMobile != null)
-                        _buildInfoRow(context, 'Residence Mobile', member.residenceMobile!, Icons.phone),
-                    ],
-                    if (member.jaloreAddress != null) ...[
-                      _buildInfoRow(context, 'Jalore Address', member.jaloreAddress!, Icons.location_on),
-                      if (member.jaloreContactNumber != null)
-                        _buildInfoRow(context, 'Jalore Contact', member.jaloreContactNumber!, Icons.phone),
-                    ],
-                  ],
+                  title: 'Family Members',
+                  children: member.familyMembers.map((fm) {
+                    final List<Widget> rows = [];
+
+                    void addRow(String label, String? value, IconData icon) {
+                      if (value != null && value.trim().isNotEmpty) {
+                        rows.add(_buildInfoRow(context, label, value, icon));
+                      }
+                    }
+
+                    // Mandatory name
+                    if (fm.name.trim().isNotEmpty) {
+                      rows.add(
+                        _buildInfoRow(context, 'Name', fm.name, Icons.person),
+                      );
+                    }
+
+                    addRow('Relationship', fm.relationship, Icons.group);
+                    addRow('Mobile', fm.mobile, Icons.phone);
+                    addRow('Gender', fm.gender, Icons.wc);
+                    addRow('Gotra', fm.gotra, Icons.account_tree);
+                    addRow('Education', fm.education, Icons.school);
+                    addRow('Occupation', fm.occupation, Icons.work);
+                    addRow('Blood Group', fm.bloodGroup, Icons.bloodtype);
+                    addRow('Hobbies', fm.hobbies, Icons.sports);
+                    addRow('Native Place', fm.nativePlace, Icons.place);
+                    addRow('Notes', fm.notes, Icons.note);
+
+                    if (fm.dateOfBirth != null) {
+                      rows.add(
+                        _buildInfoRow(
+                          context,
+                          'Date of Birth',
+                          DateFormat('yyyy MMM dd').format(fm.dateOfBirth!),
+                          Icons.cake,
+                        ),
+                      );
+                    }
+
+                    if (fm.anniversaryDate != null) {
+                      rows.add(
+                        _buildInfoRow(
+                          context,
+                          'Anniversary',
+                          DateFormat('yyyy MMM dd').format(fm.anniversaryDate!),
+                          Icons.favorite,
+                        ),
+                      );
+                    }
+
+                    // Matrimony flag (only if true)
+                    // if (fm.matrimony) {
+                    //   rows.add(
+                    //     _buildInfoRow(
+                    //       context,
+                    //       'Matrimony',
+                    //       'Yes',
+                    //       Icons.favorite_border,
+                    //     ),
+                    //   );
+                    // }
+
+                    // If no valid fields → render nothing
+                    if (rows.isEmpty) return const SizedBox.shrink();
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ...rows,
+                        const Divider(height: 24),
+                      ],
+                    );
+                  }).toList(),
                 ),
 
-              // Family Image
-              if (member.familyImageUrl != null)
-                _buildSection(
-                  context,
-                  title: 'Family Image',
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: AppTheme.backgroundGrey,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: AppTheme.dividerGrey),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          member.familyImageUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(
-                                Icons.family_restroom,
-                                size: 64,
-                                color: AppTheme.textGrey,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
 
               const SizedBox(height: 24),
             ],
@@ -260,6 +283,24 @@ class MemberDetailScreen extends StatelessWidget {
               ],
             ),
           ),
+          if(member.mobile.isNotEmpty && label == 'Mobile')
+            IconButton(
+              icon: const Icon(Icons.call, color: Colors.green),
+              onPressed: () async {
+                final phone = member.mobile;
+                if ( phone.isEmpty) {
+                  return;
+                }
+
+                final Uri callUri = Uri(scheme: 'tel', path: phone);
+
+                if (await canLaunchUrl(callUri)) {
+                  await launchUrl(callUri);
+                } else {
+                  debugPrint('Could not launch dialer');
+                }
+              },
+            ),
         ],
       ),
     );
