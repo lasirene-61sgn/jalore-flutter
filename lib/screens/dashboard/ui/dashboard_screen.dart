@@ -17,6 +17,10 @@ import '../../events/ui/events_screen.dart';
 import '../../galllery/ui/gallery_screen.dart';
 import '../../helpline/ui/helpline_screen.dart';
 import '../../business/ui/business_screen.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rive_animated_icon/rive_animated_icon.dart';
+import '../../profile/notifier/profile_notifier.dart';
+import '../../profile/ui/profile_edit_screen.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -30,11 +34,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void initState() {
     super.initState();
     Future.microtask(() {
+      ref.read(profileNotifierProvider.notifier).loadProfile();
       ref.read(dashboardNotifierProvider.notifier).loadBirthdays();
       ref.read(dashboardNotifierProvider.notifier).loadBanner();
       ref.read(newsNotifierProvider.notifier).loadNews();
       ref.read(dashboardNotifierProvider.notifier).loadAnniversaries();
       ref.read(dashboardNotifierProvider.notifier).loadNotification();
+      ref.read(dashboardNotifierProvider.notifier).loadDashboardCounters();
+      ref.read(dashboardNotifierProvider.notifier).loadSocialLinks();
     });
   }
 
@@ -42,69 +49,128 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(dashboardNotifierProvider);
     final newsState = ref.watch(newsNotifierProvider);
+    final profileState = ref.watch(profileNotifierProvider);
     final unreadCount = state.notification.where((n) => n.isRead == false).length;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
-        ),
-        actions: [
-          IconButton(
-      icon: Stack(
+      body: Column(
         children: [
-          const Icon(
-            Icons.notifications_none_outlined,
-            color: Colors.black87,
-            size: 28,
-          ),
-
-          if (unreadCount > 0)
-            Positioned(
-              right: 0,
-              top: 0,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-                constraints:
-                const BoxConstraints(minWidth: 16, minHeight: 16),
-                child: Text(
-                  unreadCount.toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+          Container(
+            color: AppTheme.ssjsSecondaryBlue,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: profileState.profile != null
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ProfileEditScreen(),
+                                ),
+                              );
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: const Color(0xFF1E90FF).withOpacity(0.1),
+                                  backgroundImage: profileState.profile!.image != null && profileState.profile!.image!.isNotEmpty
+                                      ? NetworkImage(profileState.profile!.image!)
+                                      : null,
+                                  child: profileState.profile!.image == null || profileState.profile!.image!.isEmpty
+                                      ? const Icon(Icons.person, color: Color(0xFF1E90FF))
+                                      : null,
+                                ),
+                                const SizedBox(width: 12),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Welcome back,',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      Text(
+                                        (profileState.profile!.labelName != null && profileState.profile!.labelName!.isNotEmpty)
+                                            ? profileState.profile!.labelName!
+                                            : profileState.profile!.name,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                const Icon(Icons.chevron_right, color: Colors.black87, size: 28),
+                              ],
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                   ),
-                  textAlign: TextAlign.center,
-                ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: Stack(
+                      children: [
+                        const Icon(
+                          Icons.notifications_none_outlined,
+                          color: Colors.black87,
+                          size: 28,
+                        ),
+                        if (unreadCount > 0)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                              child: Text(
+                                unreadCount.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    onPressed: () {
+                      _showNotifications(context);
+                    },
+                  ),
+                ],
               ),
             ),
-        ],
-      ),
-      onPressed: () {
-        _showNotifications(context);
-      },
-    ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Section Header
+          ),
+          ),
+          Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Section Header
              if(newsState.newsList.isNotEmpty) const Text(
                 'Latest News',
                 style: TextStyle(
@@ -134,56 +200,53 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 childAspectRatio: 1.1,
                 children: [
                   MenuButton(
-                    icon: Icons.groups_rounded,
+                    riveIcon: RiveIcon.search,
                     label: 'Find A Member',
+                    badgeCount: state.counters?.newCustomerCount,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const MembersScreen(),
-                        ),
+                        MaterialPageRoute(builder: (context) => const MembersScreen()),
                       );
                     },
                   ),
                   MenuButton(
-                    icon: Icons.receipt_long_rounded,
+                    riveIcon: RiveIcon.timer,
                     label: 'Events',
+                    badgeCount: state.counters?.newEventCount,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const EventsScreen(),
-                        ),
+                        MaterialPageRoute(builder: (context) => const EventsScreen()),
                       );
                     },
                   ),
                   MenuButton(
-                    icon: Icons.people_alt_rounded,
+                    riveIcon: RiveIcon.profile2,
                     label: 'Committee\nMembers',
+                    badgeCount: state.counters?.newCommitteeCount,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const CommitteeScreen(),
-                        ),
+                        MaterialPageRoute(builder: (context) => const CommitteeScreen()),
                       );
                     },
                   ),
                   MenuButton(
-                    icon: Icons.photo_library_rounded,
+                    riveIcon: RiveIcon.gallery,
                     label: 'Gallery',
+                    badgeCount: state.counters?.newGalleryCount,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const GalleryScreen(),
-                        ),
+                        MaterialPageRoute(builder: (context) => const GalleryScreen()),
                       );
                     },
                   ),
                   MenuButton(
-                    icon: Icons.cake_rounded,
-                    label: 'Today\'s\nBirthday',
+                    riveIcon: RiveIcon.gift,
+                    label: 'Birthdays',
+                    badgeCount: state.todayBirthdayCount,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -191,12 +254,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           builder: (context) => const BirthdayScreen(),
                         ),
                       );
-                      // _showTodayBirthdays(context, ref);
                     },
                   ),
                   MenuButton(
-                    icon: Icons.favorite_rounded,
-                    label: 'Today\'s\nAnniversary',
+                    riveIcon: RiveIcon.like,
+                    label: 'Anniversaries',
+                    badgeCount: state.todayAnniversaryCount,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -204,220 +267,148 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           builder: (context) => const AnniversaryScreen(),
                         ),
                       );
-                      // _showTodayAnniversaries(context, ref);
                     },
                   ),
                   MenuButton(
-                    icon: Icons.person,
-                    label: 'Matrimoney',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MatrimoneyScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    icon: Icons.business_rounded,
+                    riveIcon: RiveIcon.home2,
                     label: 'Business\nDirectory',
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const BusinessScreen(),
-                        ),
+                        MaterialPageRoute(builder: (context) => const BusinessScreen()),
                       );
                     },
                   ),
                   MenuButton(
-                    icon: Icons.support_agent_rounded,
+                    riveIcon: RiveIcon.profile2,
                     label: 'HelpLine',
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const HelplineScreen(),
-                        ),
+                        MaterialPageRoute(builder: (context) => const HelplineScreen()),
+                      );
+                    },
+                  ),
+                  MenuButton(
+                    riveIcon: RiveIcon.profile2,
+                    label: 'Matrimony',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MatrimoneyScreen()),
                       );
                     },
                   ),
                 ],
               ),
               const SizedBox(height: 20),
+                            
+              // Social Media Icons Row
+              if (state.socialLinks != null &&
+                  (state.socialLinks!.facebookLink != null ||
+                   state.socialLinks!.whatsappLink != null ||
+                   state.socialLinks!.instagramLink != null ||
+                   state.socialLinks!.linkedinLink != null ||
+                   state.socialLinks!.emailLink != null ||
+                   state.socialLinks!.twitterLink != null)) ...[
+                const Center(
+                  child: Text(
+                    'Connect with us',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: Wrap(
+                    spacing: 20,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      if (state.socialLinks!.facebookLink != null && state.socialLinks!.facebookLink!.isNotEmpty)
+                        _buildSocialIcon(
+                          icon: const FaIcon(FontAwesomeIcons.facebook, color: Color(0xFF1877F2), size: 24),
+                          color: const Color(0xFF1877F2),
+                          onTap: () => _launchURL(state.socialLinks!.facebookLink!),
+                        ),
+                      if (state.socialLinks!.whatsappLink != null && state.socialLinks!.whatsappLink!.isNotEmpty)
+                        _buildSocialIcon(
+                          icon: const FaIcon(FontAwesomeIcons.whatsapp, color: Color(0xFF25D366), size: 24),
+                          color: const Color(0xFF25D366),
+                          onTap: () {
+                            String waLink = state.socialLinks!.whatsappLink!;
+                            if (!waLink.startsWith('http')) {
+                              if (waLink.length == 10 && !waLink.startsWith('+')) waLink = '91$waLink';
+                              waLink = 'https://wa.me/$waLink';
+                            }
+                            _launchURL(waLink);
+                          },
+                        ),
+                      if (state.socialLinks!.instagramLink != null && state.socialLinks!.instagramLink!.isNotEmpty)
+                        _buildSocialIcon(
+                          icon: const FaIcon(FontAwesomeIcons.instagram, color: Color(0xFFE4405F), size: 24),
+                          color: const Color(0xFFE4405F),
+                          onTap: () => _launchURL(state.socialLinks!.instagramLink!),
+                        ),
+                      if (state.socialLinks!.linkedinLink != null && state.socialLinks!.linkedinLink!.isNotEmpty)
+                        _buildSocialIcon(
+                          icon: const FaIcon(FontAwesomeIcons.linkedin, color: Color(0xFF0A66C2), size: 24),
+                          color: const Color(0xFF0A66C2),
+                          onTap: () => _launchURL(state.socialLinks!.linkedinLink!),
+                        ),
+                      if (state.socialLinks!.twitterLink != null && state.socialLinks!.twitterLink!.isNotEmpty)
+                        _buildSocialIcon(
+                          icon: const FaIcon(FontAwesomeIcons.xTwitter, color: Colors.black, size: 24),
+                          color: Colors.black,
+                          onTap: () => _launchURL(state.socialLinks!.twitterLink!),
+                        ),
+                      if (state.socialLinks!.emailLink != null && state.socialLinks!.emailLink!.isNotEmpty)
+                        _buildSocialIcon(
+                          icon: const Icon(Icons.email, color: Color(0xFFD44638), size: 24),
+                          color: const Color(0xFFD44638),
+                          onTap: () => _launchURL('mailto:${state.socialLinks!.emailLink!}'),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
+              ],
             ],
           ),
         ),
       ),
+            ),
+          ],
+        ),
     );
   }
 
-  void _showTodayBirthdays(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(dashboardNotifierProvider);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFF9A9E), Color(0xFFFAD0C4)],
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(Icons.cake, color: Colors.white),
-            ),
-            const SizedBox(width: 12),
-            const Text('Today\'s Birthdays'),
-          ],
+  Widget _buildSocialIcon({required Widget icon, required Color color, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(50),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          shape: BoxShape.circle,
         ),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: state.birthdayList.isEmpty
-              ? const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'No birthdays today',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: state.birthdayList.length,
-                  itemBuilder: (context, index) {
-                    final member = state.birthdayList[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFFF9A9E), Color(0xFFFAD0C4)],
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.cake,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                        title: Text(
-                          member.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(member.mobile),
-                        trailing: IconButton(
-                          icon: const Icon(
-                            Icons.phone,
-                            color: Color(0xFFFF6B9D),
-                          ),
-                          onPressed: () {
-                            _makePhoneCall(member.mobile);
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
+        child: icon,
       ),
     );
   }
 
-  void _showTodayAnniversaries(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(dashboardNotifierProvider);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFD868C), Color(0xFFFEDBD0)],
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(Icons.favorite, color: Colors.white),
-            ),
-            const SizedBox(width: 12),
-            const Text('Today\'s Anniversaries'),
-          ],
-        ),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: state.anniversaryList.isEmpty
-              ? const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'No anniversaries today',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: state.anniversaryList.length,
-                  itemBuilder: (context, index) {
-                    final member = state.anniversaryList[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFFD868C), Color(0xFFFEDBD0)],
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.favorite,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                        title: Text(
-                          member.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(member.mobile),
-                        trailing: IconButton(
-                          icon: const Icon(
-                            Icons.phone,
-                            color: Color(0xFFE91E63),
-                          ),
-                          onPressed: () {
-                            _makePhoneCall(member.mobile);
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('Could not launch $url: $e');
+    }
   }
+
 
   Future<void> _makePhoneCall(String phoneNumber) async {
     final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
@@ -678,59 +669,132 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 }
 
 // Custom Widget for the Gradient Menu Buttons
-class MenuButton extends StatelessWidget {
-  final IconData icon;
+class MenuButton extends StatefulWidget {
+  final RiveIcon riveIcon;
   final String label;
   final VoidCallback onTap;
+  final int? badgeCount;
 
   const MenuButton({
     super.key,
-    required this.icon,
+    required this.riveIcon,
     required this.label,
     required this.onTap,
+    this.badgeCount,
   });
 
   @override
+  State<MenuButton> createState() => _MenuButtonState();
+}
+
+class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _floatAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat(reverse: true);
+    
+    _floatAnimation = Tween<Offset>(
+      begin: const Offset(0, 0),
+      end: const Offset(0, -0.15),
+    ).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: AppTheme.ssjsSecondaryBlue,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.blue.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-          // gradient: const LinearGradient(
-          //   begin: Alignment.topLeft,
-          //   end: Alignment.bottomRight,
-          //   colors: [
-          //     Color(0xFF4DA6FF),
-          //     Color(0xFF1E90FF),
-          //     Color(0xFF1873CC),
-          //   ],
-          // ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 48, color: Colors.white),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: widget.onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: IgnorePointer(
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF4DA6FF),
+                      Color(0xFF1E90FF),
+                      Color(0xFF1873CC),
+                    ],
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SlideTransition(
+                      position: _floatAnimation,
+                      child: RiveAnimatedIcon(
+                        riveIcon: widget.riveIcon,
+                        width: 48,
+                        height: 48,
+                        color: Colors.white,
+                        strokeWidth: 2,
+                        loopAnimation: true,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.label,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              if (widget.badgeCount != null && widget.badgeCount! > 0)
+                Positioned(
+                  top: -8,
+                  right: -8,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      widget.badgeCount.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

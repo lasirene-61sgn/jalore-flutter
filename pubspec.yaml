@@ -72,6 +72,8 @@ dependencies:
   firebase_core:
   firebase_messaging:
   flutter_local_notifications:
+  font_awesome_flutter: ^11.0.0
+  rive_animated_icon: ^2.1.0
 
 dev_dependencies:
   flutter_test:

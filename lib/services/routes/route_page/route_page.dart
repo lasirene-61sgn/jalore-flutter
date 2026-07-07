@@ -1,7 +1,7 @@
 import 'package:flutter_app/screens/auth/login/ui/login_screen.dart';
 import 'package:flutter_app/screens/auth/otp_verification_screen.dart';
 import 'package:flutter_app/screens/home_screen.dart';
-import 'package:flutter_app/screens/splash_screen.dart';
+import 'package:flutter_app/screens/splash/ui/splash_screen.dart';
 import 'package:flutter_app/services/routes/route_name/route_name.dart';
 import 'package:get/get.dart';
 class AppPages {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../config/theme.dart';
 import '../screens/members/model/member_model.dart';
 import 'profile/ui/profile_edit_screen.dart';
@@ -15,7 +16,7 @@ class MemberDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(member.name),
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        backgroundColor: Colors.white,
         // actions: [
         //   IconButton(
         //     icon: const Icon(Icons.edit),
@@ -36,47 +37,90 @@ class MemberDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Profile Header
-              Container(
+              SizedBox(
                 width: double.infinity,
-                padding: const EdgeInsets.all(24),
-                color: AppTheme.backgroundGrey,
-                child: Column(
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
                   children: [
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: AppTheme.backgroundWhite,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppTheme.primaryBlue, width: 3),
-                      ),
-                      child: member.image != null
-                          ? ClipOval(
-                              child: Image.network(
-                                member.image!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(
+                    Column(
+                      children: [
+                        // Background Image Section
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.25,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryBlue.withOpacity(0.1),
+                            image: member.backgroundImage != null && member.backgroundImage!.isNotEmpty
+                                ? DecorationImage(
+                                    image: NetworkImage(member.backgroundImage!),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                          ),
+                        ),
+                        // Space for overlapping avatar and name
+                        const SizedBox(height: 70),
+                        Text(
+                          (member.labelName != null && member.labelName!.isNotEmpty)
+                              ? member.labelName!
+                              : member.name,
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                        if (member.labelName != null && member.labelName!.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            member.name,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: Colors.grey[700],
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                    // Profile Avatar overlapping bottom center of background
+                    Positioned(
+                      top: (MediaQuery.of(context).size.height * 0.25) - 60,
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: AppTheme.backgroundWhite,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppTheme.primaryBlue,
+                            width: 3,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: member.image != null && member.image!.isNotEmpty
+                              ? Image.network(
+                                  member.image!,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) => const Icon(
                                     Icons.person,
                                     color: AppTheme.primaryBlue,
                                     size: 80,
-                                  );
-                                },
-                              ),
-                            )
-                          : const Icon(
-                              Icons.person,
-                              color: AppTheme.primaryBlue,
-                              size: 80,
-                            ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      member.name,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                      textAlign: TextAlign.center,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.person,
+                                  color: AppTheme.primaryBlue,
+                                  size: 80,
+                                ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -89,8 +133,10 @@ class MemberDetailScreen extends StatelessWidget {
                 children: [
                   if (member.mobile.isNotEmpty)
                     _buildInfoRow(context, 'Mobile', member.mobile, Icons.phone),
-                  if (member.whatsapp != null)
-                    _buildInfoRow(context, 'Email', member.whatsapp!, Icons.email),
+                  if (member.whatsapp != null && member.whatsapp!.isNotEmpty)
+                    _buildInfoRow(context, 'WhatsApp', member.whatsapp!, Icons.chat),
+                  if (member.email != null && member.email!.isNotEmpty)
+                    _buildInfoRow(context, 'Email', member.email!, Icons.email),
                 ],
               ),
 
@@ -111,14 +157,14 @@ class MemberDetailScreen extends StatelessWidget {
                     _buildInfoRow(
                       context,
                       'Date of Birth',
-                      DateFormat('yyyy MMM dd').format(member.dateOfBirth!),
+                      DateFormat('dd-MM-yyyy').format(member.dateOfBirth!),
                       Icons.cake,
                     ),
                   if (member.anniversaryDate != null)
                     _buildInfoRow(
                       context,
                       'Anniversary',
-                      DateFormat('yyyy MMM dd').format(member.anniversaryDate!),
+                      DateFormat('dd-MM-yyyy').format(member.anniversaryDate!),
                       Icons.favorite,
                     ),
                 ],
@@ -229,10 +275,17 @@ class MemberDetailScreen extends StatelessWidget {
   }
 
   Widget _buildSection(
-    BuildContext context, {
-    required String title,
-    required List<Widget> children,
-  }) {
+      BuildContext context, {
+        required String title,
+        required List<Widget> children,
+      }) {
+    final validChildren = children.where((w) {
+      if (w is SizedBox && w.width == 0.0 && w.height == 0.0) return false;
+      return true;
+    }).toList();
+
+    if (validChildren.isEmpty) return const SizedBox.shrink();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Column(
@@ -241,18 +294,20 @@ class MemberDetailScreen extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppTheme.primaryBlue,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: AppTheme.primaryBlue,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 12),
-          ...children,
+          ...validChildren,
         ],
       ),
     );
   }
 
   Widget _buildInfoRow(BuildContext context, String label, String value, IconData icon) {
+    if (value.trim().isEmpty || value == 'null') return const SizedBox.shrink();
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -271,9 +326,9 @@ class MemberDetailScreen extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.textGrey,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: AppTheme.textGrey,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -283,21 +338,39 @@ class MemberDetailScreen extends StatelessWidget {
               ],
             ),
           ),
-          if(member.mobile.isNotEmpty && label == 'Mobile')
+          if(label == 'Mobile' && value.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.call, color: Colors.green),
               onPressed: () async {
-                final phone = member.mobile;
-                if ( phone.isEmpty) {
-                  return;
-                }
-
-                final Uri callUri = Uri(scheme: 'tel', path: phone);
-
+                final Uri callUri = Uri(scheme: 'tel', path: value);
                 if (await canLaunchUrl(callUri)) {
                   await launchUrl(callUri);
                 } else {
                   debugPrint('Could not launch dialer');
+                }
+              },
+            ),
+          if(label == 'WhatsApp' && value.isNotEmpty)
+            IconButton(
+              icon: const FaIcon(FontAwesomeIcons.whatsapp, color: Color(0xFF25D366)),
+              onPressed: () async {
+                final Uri waUri = Uri.parse('https://wa.me/$value');
+                if (await canLaunchUrl(waUri)) {
+                  await launchUrl(waUri, mode: LaunchMode.externalApplication);
+                } else {
+                  debugPrint('Could not launch WhatsApp');
+                }
+              },
+            ),
+          if(label == 'Email' && value.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.email, color: Color(0xFFD44638)),
+              onPressed: () async {
+                final Uri emailUri = Uri(scheme: 'mailto', path: value);
+                if (await canLaunchUrl(emailUri)) {
+                  await launchUrl(emailUri);
+                } else {
+                  debugPrint('Could not launch Email');
                 }
               },
             ),

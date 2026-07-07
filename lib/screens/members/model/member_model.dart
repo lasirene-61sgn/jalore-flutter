@@ -3,7 +3,7 @@ import 'package:flutter_app/screens/dashboard/model/dashboard_model.dart';
 
 class FamilyMember {
   final int id;
-  final int? customerId;
+  final int customerId;
   final String name;
   final String? image;
   final String? relationship;
@@ -24,7 +24,7 @@ class FamilyMember {
 
   FamilyMember({
     required this.id,
-    this.customerId,
+    required this.customerId,
     required this.name,
     this.image,
     this.relationship,
@@ -44,16 +44,25 @@ class FamilyMember {
     required this.updatedAt,
   });
 
+  static DateTime? _parseDate(dynamic v) =>
+      v == null ? null : DateTime.tryParse(v.toString());
+
+  static bool _parseBool(dynamic v) {
+    if (v is bool) return v;
+    if (v is int) return v == 1;
+    return false;
+  }
+
   factory FamilyMember.fromJson(Map<String, dynamic> json) {
     return FamilyMember(
       id: json['id'] ?? 0,
-      customerId: json['customer_id'],
+      customerId: json['customer_id'] ?? 0,
       name: json['name'] ?? '',
       image: json['image'],
       relationship: json['relationship'],
       mobile: json['mobile'],
-      dateOfBirth: Member._parseDate(json['date_of_birth']),
-      anniversaryDate: Member._parseDate(json['anniversary_date']),
+      dateOfBirth: _parseDate(json['date_of_birth']),
+      anniversaryDate: _parseDate(json['anniversary_date']),
       gotra: json['gotra'],
       occupation: json['occupation'],
       education: json['education'],
@@ -61,14 +70,13 @@ class FamilyMember {
       hobbies: json['hobbies'],
       nativePlace: json['native_place'],
       notes: json['notes'],
-      matrimony: Member._parseBool(json['matrimony']),
+      matrimony: _parseBool(json['matrimony']),
       gender: json['gender'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 }
-
 
 // ================= MEMBER MODEL =================
 
@@ -81,6 +89,7 @@ class Member {
   final String? area;
   final String name;
   final String? image;
+  final String? backgroundImage;
   final String? fatherName;
   final String? gotra;
   final String? labelName;
@@ -131,6 +140,7 @@ class Member {
     this.area,
     required this.name,
     this.image,
+    this.backgroundImage,
     this.fatherName,
     this.gotra,
     this.labelName,
@@ -186,6 +196,7 @@ class Member {
       area: json['area'],
       name: json['name'] ?? '',
       image: json['image'],
+      backgroundImage: json['background_image'],
       fatherName: json['father_name'],
       gotra: json['gotra'],
       labelName: json['label_name'],

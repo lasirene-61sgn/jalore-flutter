@@ -83,26 +83,66 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
             child: ClipRRect(
               borderRadius:
               const BorderRadius.vertical(top: Radius.circular(8)),
-              child: Image.network(
-                news.imagePath,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) {
-                  return const Center(
-                    child: Icon(
-                      Icons.article,
-                      size: 64,
-                      color: AppTheme.backgroundWhite,
-                    ),
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        insetPadding: const EdgeInsets.all(16),
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Image.network(
+                              news.imagePath,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, __, ___) => const Padding(
+                                padding: EdgeInsets.all(50),
+                                child: Icon(Icons.broken_image, size: 50),
+                              ),
+                            ),
+                            Positioned(
+                              top: 12,
+                              right: 12,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.black.withOpacity(0.4),
+                                child: IconButton(
+                                  icon: const Icon(Icons.close, color: Colors.white),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   );
                 },
-                loadingBuilder: (context, child, loadingProgress) {
+                child: Image.network(
+                  news.imagePath,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) {
+                    return const Center(
+                      child: Icon(
+                        Icons.article,
+                        size: 64,
+                        color: AppTheme.backgroundWhite,
+                      ),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
             ),
           ),
+        ),
 
           /// Details
           Padding(

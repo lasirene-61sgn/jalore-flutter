@@ -142,21 +142,19 @@ class _ImagesScreenViewState extends ConsumerState<ImagesScreenView> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.6,
-            width: double.infinity,
-            child: Stack(
-              children: [
-                /// 1️⃣ Media (Image or Video)
-                isVideo
-                    ? GalleryVideoPlayer(videoUrl: mediaUrl)
-                    : Image.network(
-                        mediaUrl,
-                        fit: BoxFit.contain, // Better for full view
-                        errorBuilder: (_, __, ___) => const Center(
-                          child: Icon(Icons.broken_image, size: 50),
-                        ),
+          child: Stack(
+            children: [
+              /// 1️⃣ Media (Image or Video)
+              isVideo
+                  ? GalleryVideoPlayer(videoUrl: mediaUrl)
+                  : Image.network(
+                      mediaUrl,
+                      fit: BoxFit.contain, // Better for full view
+                      errorBuilder: (_, __, ___) => const Padding(
+                        padding: EdgeInsets.all(50),
+                        child: Icon(Icons.broken_image, size: 50),
                       ),
+                    ),
 
                 /// 2️⃣ Gradient Overlay (Optional)
                 if (!isVideo)
@@ -193,7 +191,6 @@ class _ImagesScreenViewState extends ConsumerState<ImagesScreenView> {
                 ),
               ],
             ),
-          ),
         );
       },
     );

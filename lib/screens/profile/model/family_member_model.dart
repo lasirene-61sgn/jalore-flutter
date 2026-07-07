@@ -16,6 +16,8 @@ class FamilyMember {
   final String? notes;
   final bool matrimony;
   final String gender;
+  final String? matrimonyPdf;
+  final String? matrimonyLink;
   final String? createdAt;
   final String? updatedAt;
 
@@ -37,12 +39,24 @@ class FamilyMember {
     this.notes,
     required this.matrimony,
     required this.gender,
+    this.matrimonyPdf,
+    this.matrimonyLink,
     this.createdAt,
     this.updatedAt,
   });
 
   /// ✅ Factory for JSON parsing
   factory FamilyMember.fromJson(Map<String, dynamic> json) {
+    String? parsePdfUrl(dynamic val) {
+      if (val == null) return null;
+      final s = val.toString().trim();
+      if (s.isEmpty) return null;
+      if (s.startsWith('http://') || s.startsWith('https://')) {
+        return s;
+      }
+      return 'https://sirohi.lasirene.xyz/$s';
+    }
+
     return FamilyMember(
       id: json['id'] ?? 0,
       customerId: json['customer_id'] ?? 0,
@@ -65,6 +79,8 @@ class FamilyMember {
       notes: json['notes'],
       matrimony: json['matrimony'] == true || json['matrimony'] == 1,
       gender: json['gender'] ?? 'male',
+      matrimonyPdf: parsePdfUrl(json['pdf']) ?? parsePdfUrl(json['matrimony_pdf']),
+      matrimonyLink: json['link'] ?? json['matrimony_link'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );
@@ -89,6 +105,8 @@ class FamilyMember {
     String? notes,
     bool? matrimony,
     String? gender,
+    String? matrimonyPdf,
+    String? matrimonyLink,
     String? createdAt,
     String? updatedAt,
   }) {
@@ -110,6 +128,8 @@ class FamilyMember {
       notes: notes ?? this.notes,
       matrimony: matrimony ?? this.matrimony,
       gender: gender ?? this.gender,
+      matrimonyPdf: matrimonyPdf ?? this.matrimonyPdf,
+      matrimonyLink: matrimonyLink ?? this.matrimonyLink,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -135,6 +155,8 @@ class FamilyMember {
       "notes": notes,
       "matrimony": matrimony,
       "gender": gender,
+      "pdf": matrimonyPdf,
+      "link": matrimonyLink,
     };
   }
 }

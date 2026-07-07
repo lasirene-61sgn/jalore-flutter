@@ -150,6 +150,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       BuildContext context,
       Map<String, dynamic> payload,
       File? profileImage,
+      File? backgroundImage,
       ) async {
     state = state.copyWith(isSaving: true, error: null);
 
@@ -160,6 +161,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
         map: payload,
         files: {
           if (profileImage != null) 'image': profileImage,
+          if(backgroundImage != null) "background_image": backgroundImage
         },
       );
 
@@ -184,6 +186,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   Future<void> addFamily(
       BuildContext context,
       File? profileImage,
+      File? pdfFile,
       Map<String,dynamic> payload) async {
     state = state.copyWith(isSaving: true, error: null);
 
@@ -194,6 +197,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
         map: payload,
         files: {
           if (profileImage != null) 'image': profileImage,
+          if (pdfFile != null) 'pdf': pdfFile,
         },
         url:'api/customer/family-members',
       );
@@ -221,6 +225,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       BuildContext context,
       String memberId,
       File? profileImage,
+      File? pdfFile,
       Map<String, dynamic> payload) async {
 
     state = state.copyWith(isSaving: true, error: null);
@@ -234,6 +239,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
         map: payload,
         files: {
           if (profileImage != null) 'image': profileImage,
+          if (pdfFile != null) 'pdf': pdfFile,
         },
       );
 

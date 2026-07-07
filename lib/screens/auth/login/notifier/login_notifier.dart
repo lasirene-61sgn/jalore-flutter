@@ -81,8 +81,14 @@ class LoginNotifier extends StateNotifier<LoginState> {
           user: userData,
         );
       } else {
-        Toaster.showError(response['message']?["message"]);
-        state = state.copyWith(isLoading: false, error: response['message']?["message"]);
+        String errorMsg = "Login failed";
+        if (response['message'] is String) {
+          errorMsg = response['message'];
+        } else if (response['message'] is Map && response['message']['message'] != null) {
+          errorMsg = response['message']['message'];
+        }
+        Toaster.showError(errorMsg);
+        state = state.copyWith(isLoading: false, error: errorMsg);
       }
     } catch (e, stackTrace) {
       final errorMsg = "Network error. Please try again.";

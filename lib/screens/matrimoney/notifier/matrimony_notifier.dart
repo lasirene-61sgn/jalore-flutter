@@ -1,186 +1,110 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/matrimoney/model/matrimony_model.dart';
-import 'package:flutter_app/services/api/api_client/api_client.dart';
-import 'package:flutter_app/services/api/repo/repo.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../model/matrimony_model.dart';
+import '../../../services/api/api_client/api_client.dart';
 
 /// ======================
 /// STATE
 /// ======================
 class MatrimoneyState {
   final bool isLoading;
+  final bool isSaving;
+  final bool isLoaded;
   final String? error;
   final List<Matrimoney> matrimoneyList;
-
-  // Filters
-  final String? ageFilter; // null = All
-  final String? genderFilter;
-  final int? startAge;
-  final int? endAge;
+  final Matrimoney? selectedMatrimoney;
 
   const MatrimoneyState({
     this.isLoading = false,
+    this.isSaving = false,
+    this.isLoaded = false,
     this.error,
     this.matrimoneyList = const [],
-    this.ageFilter,
-    this.genderFilter,
-    this.startAge,
-    this.endAge,
+    this.selectedMatrimoney,
   });
 
-  /// 🔥 Helper: ALL means NO restriction
-  bool get isAllAge =>
-      ageFilter == null && startAge == null && endAge == null;
-
-  /// ======================
-  /// FILTERED LIST (FINAL)
-  /// ======================
-  List<Matrimoney> get filteredList {
-    return matrimoneyList.where((item) {
-      /// Gender filter
-      final matchesGender = genderFilter == null ||
-          item.familyMemberGender?.toLowerCase() ==
-              genderFilter!.toLowerCase();
-
-      /// Age filter
-      final age = item.familyMemberAge ?? 0;
-      bool matchesAge = true;
-
-      // 🟢 ALL = NO restriction (ALWAYS)
-      if (isAllAge) {
-        matchesAge = true;
-      }
-      // 1️⃣ Quick age filter
-      else if (ageFilter != null) {
-        switch (ageFilter) {
-          case '18-25':
-            matchesAge = age >= 18 && age <= 25;
-            break;
-          case '20-24':
-            matchesAge = age >= 20 && age <= 24;
-            break;
-          case '25-30':
-            matchesAge = age >= 25 && age <= 30;
-            break;
-          default:
-            matchesAge = age.toString() == ageFilter;
-        }
-      }
-      // 2️⃣ Custom range
-      else if (startAge != null && endAge != null) {
-        matchesAge = age >= startAge! && age <= endAge!;
-      }
-
-      return matchesGender && matchesAge;
-    }).toList();
-  }
-
-  /// ======================
-  /// COPY WITH
-  /// ======================
   MatrimoneyState copyWith({
     bool? isLoading,
+    bool? isSaving,
+    bool? isLoaded,
     String? error,
     List<Matrimoney>? matrimoneyList,
-    String? ageFilter,
-    bool clearAgeFilter = false,
-    String? genderFilter,
-    bool clearGender = false,
-    int? startAge,
-    int? endAge,
-    bool clearAge = false,
+    Matrimoney? selectedMatrimoney,
   }) {
     return MatrimoneyState(
       isLoading: isLoading ?? this.isLoading,
+      isSaving: isSaving ?? this.isSaving,
+      isLoaded: isLoaded ?? this.isLoaded,
       error: error,
       matrimoneyList: matrimoneyList ?? this.matrimoneyList,
-      ageFilter: clearAgeFilter ? null : (ageFilter ?? this.ageFilter),
-      genderFilter: clearGender ? null : (genderFilter ?? this.genderFilter),
-      startAge: clearAge ? null : (startAge ?? this.startAge),
-      endAge: clearAge ? null : (endAge ?? this.endAge),
+      selectedMatrimoney:
+      selectedMatrimoney ?? this.selectedMatrimoney,
     );
   }
 }
-class MatrimoneyNotifier extends StateNotifier<MatrimoneyState> {
+
+/// ======================
+/// NOTIFIER
+/// ======================
+class MatrimoneyNotifier
+    extends StateNotifier<MatrimoneyState> {
   MatrimoneyNotifier() : super(const MatrimoneyState());
 
-  /// 🔄 Reset ONLY age (used by "All")
-  void clearAgeFilters() {
-    state = state.copyWith(
-      clearAgeFilter: true,
-      clearAge: true,
-    );
-  }
-
-  /// 🔄 Reset EVERYTHING (used by refresh button)
-  void clearAllFilters() {
-    state = state.copyWith(
-      clearAgeFilter: true,
-      clearAge: true,
-      clearGender: true,
-    );
-  }
-
-  /// Gender
-  void setGenderFilter(String? gender) {
-    state = state.copyWith(
-      genderFilter: gender,
-      clearGender: gender == null,
-    );
-  }
-
-  /// Custom age range
-  void setCustomAgeRange(int? start, int? end) {
-    state = state.copyWith(
-      startAge: start,
-      endAge: end,
-      clearAgeFilter: true, // remove quick filter
-    );
-  }
-
-  /// Quick age filter
-  void setAgeFilter(String? age) {
-    state = state.copyWith(
-      ageFilter: age,
-      clearAgeFilter: age == null,
-      clearAge: age != null, // remove custom range
-    );
-  }
-
-  /// API
   Future<void> loadMatrimoney(String url) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(
+      isLoading: true,
+      isLoaded: false,
+      error: null,
+    );
 
     try {
       final response = await ApiClient().get(url);
 
-      if (response['status'] == 1) {
-        final data = response['data']?['data'];
+      if (response["status"] == 1) {
+        print("RAW RESPONSE: $response");
 
-        state = state.copyWith(
-          isLoading: false,
-          matrimoneyList: data is List
-              ? data.map((e) => Matrimoney.fromJson(e)).toList()
-              : [],
-        );
+        final dynamic rawData = response['data']?['data'];
+
+        if (rawData != null && rawData is List) {
+          final list = rawData
+              .map((e) => Matrimoney.fromJson(e))
+              .toList();
+
+          print("PARSED MATRIMONEY COUNT: ${list.length}");
+
+          state = state.copyWith(
+            isLoading: false,
+            isLoaded: true,
+            matrimoneyList: list,
+          );
+        } else {
+          state = state.copyWith(
+            isLoading: false,
+            isLoaded: true,
+            matrimoneyList: [],
+          );
+        }
       } else {
         state = state.copyWith(
           isLoading: false,
-          error: 'Server error',
+          error: 'Server returned error status',
         );
       }
     } catch (e) {
+      print("ERROR: $e");
       state = state.copyWith(
         isLoading: false,
-        error: e.toString(),
+        error: 'Failed to load matrimoney: $e',
       );
     }
   }
 }
 
+/// ======================
+/// PROVIDER
 /// ======================
 final matrimoneyNotifierProvider =
 StateNotifierProvider<MatrimoneyNotifier, MatrimoneyState>(

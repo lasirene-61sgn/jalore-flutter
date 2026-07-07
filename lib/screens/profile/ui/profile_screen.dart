@@ -69,65 +69,151 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 : SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(32),
-                          color: AppTheme.backgroundGrey,
-                          child: Column(
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            alignment: Alignment.center,
                             children: [
-                              Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  color: AppTheme.backgroundWhite,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: AppTheme.primaryBlue,
-                                    width: 3,
+                              Column(
+                                children: [
+                                  // Background Image Section
+                                  Container(
+                                    height: MediaQuery.of(context).size.height * 0.25,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.primaryBlue.withOpacity(0.1),
+                                      image: profile.backgroundImage != null && profile.backgroundImage!.isNotEmpty
+                                          ? DecorationImage(
+                                              image: NetworkImage(profile.backgroundImage!),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : null,
+                                    ),
                                   ),
-                                ),
-                                child: ClipOval(
-                                  child: profile.image != null && profile.image!.isNotEmpty
-                                      ? Image.network(
-                                    profile.image!,
-                                    fit: BoxFit.cover,
-                                    // --- LOADING STATE ---
-                                    loadingBuilder: (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return const Center(
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      );
-                                    },
-                                    // --- ERROR STATE ---
-                                    errorBuilder: (context, error, stackTrace) => const Icon(
+                                  
+                                  // Space for overlapping avatar and name
+                                  const SizedBox(height: 70),
+                                  
+                                  Text(
+                                    (profile.labelName != null && profile.labelName!.isNotEmpty)
+                                        ? profile.labelName!
+                                        : profile.name,
+                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  if (profile.labelName != null && profile.labelName!.isNotEmpty) ...[
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      profile.name,
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        color: Colors.grey[700],
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    profile.mobile,
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: AppTheme.textGrey,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  if (profile.labelName != null && profile.labelName!.isNotEmpty) ...[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(Icons.label, size: 18, color: AppTheme.primaryBlue),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            'Label Name: ${profile.labelName}',
+                                            style: Theme.of(context).textTheme.bodyMedium,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  const SizedBox(height: 16),
+                                ],
+                              ),
+                              
+                              // Profile Avatar overlapping bottom center of background
+                              Positioned(
+                                top: (MediaQuery.of(context).size.height * 0.25) - 60,
+                                child: GestureDetector(
+                                onTap: () {
+                                  if (profile.image == null || profile.image!.isEmpty) return;
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      insetPadding: const EdgeInsets.all(16),
+                                      clipBehavior: Clip.antiAlias,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Image.network(profile.image!, fit: BoxFit.contain),
+                                          Positioned(
+                                            top: 12,
+                                            right: 12,
+                                            child: CircleAvatar(
+                                              backgroundColor: Colors.black.withOpacity(0.4),
+                                              child: IconButton(
+                                                icon: const Icon(Icons.close, color: Colors.white),
+                                                onPressed: () => Navigator.pop(context),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 120,
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.backgroundWhite,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppTheme.primaryBlue,
+                                      width: 3,
+                                    ),
+                                  ),
+                                  child: ClipOval(
+                                    child: profile.image != null && profile.image!.isNotEmpty
+                                        ? Image.network(
+                                      profile.image!,
+                                      fit: BoxFit.cover,
+                                      // --- LOADING STATE ---
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return const Center(
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        );
+                                      },
+                                      // --- ERROR STATE ---
+                                      errorBuilder: (context, error, stackTrace) => const Icon(
+                                        Icons.person,
+                                        color: AppTheme.primaryBlue,
+                                        size: 80,
+                                      ),
+                                    )
+                                        : const Icon(
                                       Icons.person,
                                       color: AppTheme.primaryBlue,
                                       size: 80,
                                     ),
-                                  )
-                                      : const Icon(
-                                    Icons.person,
-                                    color: AppTheme.primaryBlue,
-                                    size: 80,
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                profile.name,
-                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                profile.mobile,
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: AppTheme.textGrey,
-                                    ),
+                                ),
                               ),
                             ],
                           ),

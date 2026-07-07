@@ -3,8 +3,10 @@ import 'package:flutter_app/config/theme.dart';
 import 'package:flutter_app/screens/profile/notifier/profile_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   // final Member member;
@@ -29,6 +31,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _gotraController = TextEditingController();
+  final TextEditingController _labelNameController = TextEditingController();
 
   // VILLAGE
   final TextEditingController _villageController = TextEditingController(); // Read-only
@@ -47,6 +50,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   DateTime? _selectedDateOfBirth;
   DateTime? _selectedDateOfAnniversary;
   File? _profileImage;
+  File? _backgroundImage;
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -73,6 +77,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       _genderController.text = profile.gender ?? '';
       _ageController.text = profile.age ?? '';
       _gotraController.text = profile.gotra ?? '';
+      _labelNameController.text = profile.labelName ?? '';
 
       _firmNameController.text = profile.msFirmName ?? '';
       _businessTypeController.text = profile.businessType ?? '';
@@ -121,7 +126,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       "area": '',
       // "image": null,
       "gotra": _gotraController.text,
-      "label_name": "",
+      "label_name": _labelNameController.text,
       "district": "",// Correctly mapped
       "dno": "",
       "street_road": "",
@@ -135,22 +140,85 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       "updated_at": DateTime.now().toIso8601String()
     };
 
-    await ref.read(profileNotifierProvider.notifier).submitProfile(context, updatedMember, _profileImage);
+    await ref.read(profileNotifierProvider.notifier).submitProfile(context, updatedMember, _profileImage, _backgroundImage);
   }
   Future<void> _pickImage(ImageSource source) async {
-    final XFile? pickedFile = await _picker.pickImage(
-      source: source,
-      imageQuality: 80, // compress
-      maxWidth: 800,
-    );
+    try {
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        if (source == ImageSource.camera) {
+          var status = await Permission.camera.request();
+          if (status.isPermanentlyDenied) {
+            _showPermissionDialog('Camera');
+            return;
+          }
+          if (!status.isGranted) return;
+        } else {
+          var status = await Permission.photos.request();
+          if (status.isPermanentlyDenied) {
+            _showPermissionDialog('Photo Library');
+            return;
+          }
+          if (!status.isGranted) return;
+        }
+      }
 
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+        imageQuality: 80,
+        maxWidth: 800,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _profileImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error picking image: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to open ${source == ImageSource.camera ? 'camera' : 'gallery'}: $e")),
+      );
     }
   }
-  void _showImagePickerSheet(BuildContext context) {
+
+  Future<void> _pickBackgroundImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+        imageQuality: 80,
+        maxWidth: 1200,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _backgroundImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error picking background image: $e");
+    }
+  }
+
+  void _showPermissionDialog(String type) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('$type Permission'),
+        content: Text('$type access is required to upload profile pictures. Please enable it in settings.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              openAppSettings();
+            },
+            child: const Text('Settings'),
+          ),
+        ],
+      ),
+    );
+  }
+  void _showImagePickerSheet(BuildContext context, {bool isBackground = false}) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -165,7 +233,11 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
               title: const Text('Camera'),
               onTap: () {
                 Navigator.pop(context);
-                _pickImage(ImageSource.camera);
+                if (isBackground) {
+                  _pickBackgroundImage(ImageSource.camera);
+                } else {
+                  _pickImage(ImageSource.camera);
+                }
               },
             ),
             ListTile(
@@ -173,7 +245,11 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
               title: const Text('Gallery'),
               onTap: () {
                 Navigator.pop(context);
-                _pickImage(ImageSource.gallery);
+                if (isBackground) {
+                  _pickBackgroundImage(ImageSource.gallery);
+                } else {
+                  _pickImage(ImageSource.gallery);
+                }
               },
             ),
           ],
@@ -187,7 +263,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(profileNotifierProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile'),backgroundColor:AppTheme.ssjsSecondaryBlue ,),
+      appBar: AppBar(title: const Text('Edit Profile'),backgroundColor:Colors.white ,),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -196,43 +272,106 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
             child: Column(
               children: [
 
-                const SizedBox(height: 24),
-                Center(
-                  child: Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 55,
-                        backgroundColor: AppTheme.backgroundGrey,
-                        backgroundImage: _profileImage != null
-                            ? FileImage(_profileImage!)
-                            : (state.profile?.image != null
-                            ? NetworkImage(state.profile!.image!)
-                            : null) as ImageProvider?,
-                        child: (_profileImage == null && state.profile?.image == null)
-                            ? const Icon(Icons.person, size: 50)
-                            : null,
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: InkWell(
-                          onTap: () => _showImagePickerSheet(context),
+                Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        // Background Image Picker
+                        GestureDetector(
+                          onTap: () => _showImagePickerSheet(context, isBackground: true),
                           child: Container(
-                            padding: const EdgeInsets.all(8),
+                            height: MediaQuery.of(context).size.height * 0.20,
+                            width: double.infinity,
                             decoration: BoxDecoration(
-                              color: AppTheme.primaryBlue,
-                              shape: BoxShape.circle,
+                              color: Colors.grey.shade300,
+                              image: _backgroundImage != null
+                                  ? DecorationImage(
+                                      image: FileImage(_backgroundImage!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : (state.profile?.backgroundImage != null && state.profile!.backgroundImage!.isNotEmpty
+                                      ? DecorationImage(
+                                          image: NetworkImage(state.profile!.backgroundImage!),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null),
                             ),
-                            child: const Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                              size: 18,
-                            ),
+                            child: _backgroundImage == null && (state.profile?.backgroundImage == null || state.profile!.backgroundImage!.isEmpty)
+                                ? const Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.camera_alt, color: Colors.grey, size: 40),
+                                        SizedBox(height: 8),
+                                        Text("Add Background Image", style: TextStyle(color: Colors.grey)),
+                                      ],
+                                    ),
+                                  )
+                                : const Align(
+                                    alignment: Alignment.topRight,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.white70,
+                                        radius: 16,
+                                        child: Icon(Icons.edit, color: Colors.black, size: 16),
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ),
-                      )
-                    ],
-                  ),
+                        // Spacer for the avatar
+                        const SizedBox(height: 60),
+                      ],
+                    ),
+                    
+                    // Profile Image Picker overlapping
+                    Positioned(
+                      top: (MediaQuery.of(context).size.height * 0.20) - 55,
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 55,
+                            backgroundColor: AppTheme.backgroundWhite,
+                            child: CircleAvatar(
+                              radius: 52,
+                              backgroundColor: AppTheme.backgroundGrey,
+                              backgroundImage: _profileImage != null
+                                  ? FileImage(_profileImage!)
+                                  : (state.profile?.image != null
+                                  ? NetworkImage(state.profile!.image!)
+                                  : null) as ImageProvider?,
+                              child: (_profileImage == null && state.profile?.image == null)
+                                  ? const Icon(Icons.person, size: 50)
+                                  : null,
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: InkWell(
+                              onTap: () => _showImagePickerSheet(context, isBackground: false),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.primaryBlue,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white, width: 2),
+                                ),
+                                child: const Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 24),
@@ -240,6 +379,14 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(labelText: 'Name', prefixIcon: Icon(Icons.person)),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _labelNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Label Name',
+                    prefixIcon: Icon(Icons.label),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -377,6 +524,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     prefixIcon: Icon(Icons.pin),
                   ),
                 ),
+
 
                 const SizedBox(height: 24),
                 ElevatedButton(

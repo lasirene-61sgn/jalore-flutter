@@ -8,6 +8,7 @@ class Profile {
 
   final String name;
   final String? image;
+  final String? backgroundImage;
   final String? fatherName;
   final String? gotra;
   final String? labelName;
@@ -57,6 +58,7 @@ class Profile {
     this.village,
     required this.name,
     this.image,
+    this.backgroundImage,
     this.fatherName,
     this.gotra,
     this.labelName,
@@ -101,6 +103,7 @@ class Profile {
     Village? village,
     String? name,
     String? image,
+    String? backgroundImage,
     String? fatherName,
     String? gotra,
     String? labelName,
@@ -143,6 +146,7 @@ class Profile {
       village: village ?? this.village,
       name: name ?? this.name,
       image: image ?? this.image,
+      backgroundImage: backgroundImage ?? this.backgroundImage,
       fatherName: fatherName ?? this.fatherName,
       gotra: gotra ?? this.gotra,
       labelName: labelName ?? this.labelName,
@@ -193,6 +197,7 @@ class Profile {
       village: json['village'] != null ? Village.fromJson(json['village']) : null,
       name: json['name'] ?? '',
       image: json['image'],
+      backgroundImage: json['background_image'],
       fatherName: json['father_name'],
       gotra: json['gotra'],
       labelName: json['label_name'],

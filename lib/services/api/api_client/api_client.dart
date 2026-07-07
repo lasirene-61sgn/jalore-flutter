@@ -64,6 +64,23 @@ class ApiClient {
     return _handleResponse(response);
   }
 
+  Future<dynamic> publicGet(String endpoint) async {
+    final url = '$baseUrl/$endpoint';
+    debugPrint('publicGet → $url');
+
+    final headers = defaultHeaders;
+    debugPrint('Headers → $headers');
+
+    try {
+      final response = await http.get(Uri.parse(url), headers: headers);
+      debugPrint('publicGet Response ← ${response.statusCode}');
+      return _handleResponse(response);
+    } catch (e) {
+      debugPrint('publicGet Exception: $e');
+      rethrow;
+    }
+  }
+
   Future<dynamic> put({required String url, Map? map}) async {
     final token = await getToken();
     final fullUrl = '$baseUrl/$url';
