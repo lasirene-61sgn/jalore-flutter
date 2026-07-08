@@ -24,8 +24,8 @@ class _HelpSupportScreenState extends ConsumerState<HelpSupportScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Help & Support'),
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
-        foregroundColor: AppTheme.backgroundWhite,
+        backgroundColor: AppTheme.backgroundWhite,
+        foregroundColor: AppTheme.textDark,
       ),
       body: SafeArea(
         child: ListView(

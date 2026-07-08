@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../config/theme.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/splash/riverpod/splash_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -83,15 +85,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
   Widget _buildStaticSplash() {
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF4DA6FF), // Light DodgerBlue
-            Color(0xFF1E90FF), // DodgerBlue (from logo)
-            Color(0xFF1873CC), // Dark DodgerBlue
-          ],
-        ),
+        color: AppTheme.ssjsSecondaryBlue,
       ),
       child: Center(
         child: FadeTransition(

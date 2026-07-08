@@ -108,7 +108,7 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        backgroundColor: AppTheme.backgroundWhite,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
@@ -135,7 +135,7 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
               //   begin: Alignment.topCenter,
               //   end: Alignment.bottomCenter,
               // ),
-              color: AppTheme.ssjsSecondaryBlue,
+              color: AppTheme.secondaryBlue,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
                 bottomRight: Radius.circular(30),

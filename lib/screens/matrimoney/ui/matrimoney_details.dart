@@ -36,7 +36,8 @@ class MatrimoneyDetailScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 280,
             pinned: true,
-            backgroundColor: AppTheme.primaryBlue,
+            backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
             iconTheme: const IconThemeData(color: Colors.white),
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(

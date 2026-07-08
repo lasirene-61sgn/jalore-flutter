@@ -121,7 +121,8 @@ class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
         title: const Text('Birthdays', style: TextStyle(color: Colors.black)),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),

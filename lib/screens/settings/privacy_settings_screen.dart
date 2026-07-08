@@ -56,8 +56,8 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Privacy Settings'),
-        backgroundColor:AppTheme.ssjsSecondaryBlue,
-        foregroundColor: AppTheme.backgroundWhite,
+        backgroundColor:AppTheme.secondaryBlue,
+        foregroundColor: AppTheme.textDark,
       ),
       body: SafeArea(
         child: ListView(

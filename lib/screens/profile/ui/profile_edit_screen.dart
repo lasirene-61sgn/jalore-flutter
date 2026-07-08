@@ -334,10 +334,12 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                         children: [
                           CircleAvatar(
                             radius: 55,
-                            backgroundColor: AppTheme.backgroundWhite,
+                            backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
                             child: CircleAvatar(
                               radius: 52,
-                              backgroundColor: AppTheme.backgroundGrey,
+                              backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
                               backgroundImage: _profileImage != null
                                   ? FileImage(_profileImage!)
                                   : (state.profile?.image != null

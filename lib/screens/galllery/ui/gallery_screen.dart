@@ -29,7 +29,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        backgroundColor: AppTheme.backgroundWhite,
         title: const Text('Gallery'),
       ),
       body: SafeArea(

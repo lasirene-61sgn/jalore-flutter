@@ -45,7 +45,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        backgroundColor: AppTheme.backgroundWhite,
         title: const Text('Committee Members'),
       ),
       body: SafeArea(

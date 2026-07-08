@@ -66,7 +66,8 @@ class _MatrimoneyScreenState extends ConsumerState<MatrimoneyScreen>
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.secondaryBlue,
+        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
         title: const Text('Matrimony'),
         elevation: 0,
       ),
@@ -167,7 +168,7 @@ class _MatrimoneyScreenState extends ConsumerState<MatrimoneyScreen>
                         'Age: ${_ageRange.start.round()} - ${_ageRange.end.round()}',
                         style: const TextStyle(fontSize: 12, color: Colors.white),
                       ),
-                      backgroundColor: AppTheme.secondaryBlue,
+                      backgroundColor: AppTheme.primaryBlue,
                       deleteIcon: const Icon(Icons.close, size: 16, color: Colors.white),
                       onDeleted: () {
                         setState(() {
@@ -610,8 +611,9 @@ class _MatrimoneyScreenState extends ConsumerState<MatrimoneyScreen>
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.secondaryBlue,
-                            foregroundColor: Colors.white,
+                            backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
+                            // foregroundColor: Colors.white,
                           ),
                           onPressed: () {
                             setState(() {

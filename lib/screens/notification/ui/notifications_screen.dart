@@ -61,8 +61,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
-        foregroundColor: AppTheme.backgroundWhite,
+        backgroundColor: AppTheme.backgroundWhite,
+        foregroundColor: AppTheme.textDark,
       ),
       body: SafeArea(
         child: ListView(

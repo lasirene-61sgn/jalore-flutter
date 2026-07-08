@@ -29,6 +29,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
         title: const Text('News'),
       ),
       body: SafeArea(

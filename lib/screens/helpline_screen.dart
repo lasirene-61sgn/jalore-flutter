@@ -8,7 +8,7 @@ class HelplineScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:AppTheme.ssjsSecondaryBlue,
+        backgroundColor:AppTheme.secondaryBlue,
         title: const Text('HelpLine'),
       ),
       body: SafeArea(

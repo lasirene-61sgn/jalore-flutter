@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -15,15 +16,18 @@ class NotificationService {
 
   static Future<void> init() async {
     // 1. Request Permissions (Crucial for Android 13+)
-    await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      await _messaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
 
     // 2. Initialize Local Notifications
     const initializationSettings = InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: DarwinInitializationSettings(), // Added for iOS support
     );
 
     await _localNotifications.initialize(
@@ -40,13 +44,17 @@ class NotificationService {
         ?.createNotificationChannel(_channel);
 
     // 4. Set Foreground Presentation Options
-    await _messaging.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      await _messaging.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
 
-    _setupMessageHandlers();
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      _setupMessageHandlers();
+    }
   }
 
   static void _setupMessageHandlers() {
@@ -86,5 +94,8 @@ class NotificationService {
     });
   }
 
-  static Future<String?> getToken() async => await _messaging.getToken();
+  static Future<String?> getToken() async {
+    if (defaultTargetPlatform == TargetPlatform.iOS) return null;
+    return await _messaging.getToken();
+  }
 }

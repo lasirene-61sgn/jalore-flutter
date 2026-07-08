@@ -16,7 +16,8 @@ class MemberDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(member.name),
-        backgroundColor: Colors.white,
+        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
         // actions: [
         //   IconButton(
         //     icon: const Icon(Icons.edit),

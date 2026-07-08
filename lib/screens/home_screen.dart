@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             height: 70,
             decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: Colors.grey, width: 0.2)),
+              border: Border(top: BorderSide(color: Colors.white70, width: 0.2)),
             ),
             child: BottomNavigationBar(
           
@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
               type: BottomNavigationBarType.fixed,
               backgroundColor: AppTheme.ssjsPrimaryBlue,
               selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.grey,
+              unselectedItemColor: Colors.white70,
               showUnselectedLabels: true,
               selectedFontSize: 12,
               unselectedFontSize: 12,
@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               riveIcon: RiveIcon.home,
                               width: 24,
                               height: 24,
-                              color: AppTheme.ssjsSecondaryBlue,
+                              color: AppTheme.ssjsPrimaryBlue,
                               loopAnimation: true,
                             ),
                           )
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             riveIcon: RiveIcon.home,
                             width: 24,
                             height: 24,
-                            color: Colors.grey,
+                            color: Colors.white70,
                             loopAnimation: false,
                           ),
                   ),

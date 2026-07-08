@@ -26,7 +26,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
     final eventsState = ref.watch(eventsNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Events'),backgroundColor: AppTheme.ssjsSecondaryBlue,),
+      appBar: AppBar(title: const Text('Events'),backgroundColor: AppTheme.backgroundWhite,),
       body: SafeArea(
         child: eventsState.isLoading  && eventsState.eventsList.isEmpty
             ? const Center(child: CircularProgressIndicator())
@@ -337,7 +337,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   Widget _fallbackImage() {
     return Container(
       height: 160,
-      color: AppTheme.ssjsSecondaryBlue,
+      color: AppTheme.secondaryBlue,
       child: const Center(
         child: Icon(Icons.event, size: 64, color: Colors.white),
       ),

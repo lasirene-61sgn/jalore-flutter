@@ -28,7 +28,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        backgroundColor: AppTheme.backgroundWhite,
         title: const Text('Notices'),
       ),
       body: SafeArea(

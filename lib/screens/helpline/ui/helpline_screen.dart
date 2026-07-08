@@ -27,7 +27,7 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        backgroundColor: AppTheme.backgroundWhite,
         elevation: 0,
         centerTitle: true,
         title: const Text(
@@ -53,7 +53,7 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
                         margin: const EdgeInsets.only(bottom: 16),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: AppTheme.ssjsSecondaryBlue,
+                          color: AppTheme.secondaryBlue,
                           boxShadow: [
                             BoxShadow(
                               color: Colors.blue.withOpacity(0.2),
@@ -98,12 +98,12 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
                                       shape: const RoundedRectangleBorder(
                                         side: BorderSide.none,
                                       ),
-                                      iconColor: AppTheme.ssjsPrimaryBlue,
-                                      collapsedIconColor: AppTheme.ssjsPrimaryBlue,
+                                      iconColor: AppTheme.primaryBlue,
+                                      collapsedIconColor: AppTheme.primaryBlue,
                                       title: Text(
                                         helpline.headingName,
                                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                              color: AppTheme.ssjsPrimaryBlue,
+                                              color: AppTheme.primaryBlue,
                                               fontWeight: FontWeight.bold,
                                             ),
                                       ),
@@ -207,14 +207,14 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
               padding: const EdgeInsets.only(bottom: 3),
               child: Row(
                 children: [
-                  Icon(icon, size: 18, color: AppTheme.ssjsPrimaryBlue),
+                  Icon(icon, size: 18, color: AppTheme.primaryBlue),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       value,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: AppTheme.ssjsPrimaryBlue,
+                            color: AppTheme.primaryBlue,
                           ),
                     ),
                   ),
@@ -227,7 +227,7 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
                               : (isWhatsapp ? Icons.chat : Icons.phone_in_talk)),
                       size: 20,
                     ),
-                    color: AppTheme.ssjsPrimaryBlue,
+                    color: AppTheme.primaryBlue,
                     onPressed: () {
                       if (isEmail) {
                         _launchUrl('mailto:$value');

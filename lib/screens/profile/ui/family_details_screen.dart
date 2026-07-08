@@ -36,7 +36,7 @@ class _FamilyDetailsScreenState extends ConsumerState<FamilyDetailsScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppTheme.ssjsSecondaryBlue,
       builder: (context) => _AddFamilyMemberDialog(
         onAdd: (memberPayload, imageFile, pdfFile) async {
           await ref.read(profileNotifierProvider.notifier).addFamily(context, imageFile, pdfFile, memberPayload);
@@ -51,7 +51,7 @@ class _FamilyDetailsScreenState extends ConsumerState<FamilyDetailsScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppTheme.ssjsSecondaryBlue,
       builder: (context) => _AddFamilyMemberDialog(
         // Pass the model's current data to the sheet
         initialData: member.toJson(),
@@ -75,14 +75,11 @@ class _FamilyDetailsScreenState extends ConsumerState<FamilyDetailsScreen> {
     final familyMembers = profileState.familyMember ?? [];
 
     return Scaffold(
-      // backgroundColor: AppTheme.primaryBlue,
+      // backgroundColor: AppTheme.ssjsSecondaryBlue,
       appBar: AppBar(
-        leading: IconButton(onPressed: (){
-          Get.back();
-        }, icon: Icon(Icons.arrow_back_ios,color: Colors.black,)),
         title: const Text('Family Details'),
-        backgroundColor:Colors.white,
-        foregroundColor: AppTheme.backgroundWhite,
+        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -199,7 +196,8 @@ class _FamilyDetailsScreenState extends ConsumerState<FamilyDetailsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addFamilyMember,
-        backgroundColor: AppTheme.primaryBlue,
+        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
         child: const Icon(Icons.add),
       ),
     );
@@ -769,8 +767,8 @@ class _AddFamilyMemberDialogState extends State<_AddFamilyMemberDialog> {
                               icon: const Icon(Icons.picture_as_pdf, size: 18),
                               label: const Text('Pick PDF'),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppTheme.secondaryBlue,
-                                foregroundColor: Colors.white,
+                                backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                               ),
                             ),
@@ -797,8 +795,8 @@ class _AddFamilyMemberDialogState extends State<_AddFamilyMemberDialog> {
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryBlue,
-                        foregroundColor: Colors.white,
+                        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -909,6 +907,7 @@ class FamilyMemberDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(member.name),
         backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

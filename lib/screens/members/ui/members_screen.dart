@@ -53,7 +53,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        backgroundColor: AppTheme.backgroundWhite,
         title: const Text('Members'),
         elevation: 0,
         actions: [

@@ -1,0 +1,565 @@
+diff --git a/lib/screens/business/ui/business_screen.dart b/lib/screens/business/ui/business_screen.dart
+index 948f58b..85a26e2 100644
+--- a/lib/screens/business/ui/business_screen.dart
++++ b/lib/screens/business/ui/business_screen.dart
+@@ -108,7 +108,7 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
+ 
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         elevation: 0,
+         centerTitle: true,
+         leading: IconButton(
+@@ -135,7 +135,7 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
+               //   begin: Alignment.topCenter,
+               //   end: Alignment.bottomCenter,
+               // ),
+-              color: AppTheme.ssjsSecondaryBlue,
++              color: AppTheme.secondaryBlue,
+               borderRadius: BorderRadius.only(
+                 bottomLeft: Radius.circular(30),
+                 bottomRight: Radius.circular(30),
+diff --git a/lib/screens/commitie/ui/committee_screen.dart b/lib/screens/commitie/ui/committee_screen.dart
+index 3b8b6c8..a3dfb6d 100644
+--- a/lib/screens/commitie/ui/committee_screen.dart
++++ b/lib/screens/commitie/ui/committee_screen.dart
+@@ -45,7 +45,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
+ 
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         title: const Text('Committee Members'),
+       ),
+       body: SafeArea(
+diff --git a/lib/screens/dashboard/ui/anniversary.dart b/lib/screens/dashboard/ui/anniversary.dart
+index 1c1d798..bfb7b74 100644
+--- a/lib/screens/dashboard/ui/anniversary.dart
++++ b/lib/screens/dashboard/ui/anniversary.dart
+@@ -9,6 +9,8 @@ import 'package:flutter_app/screens/dashboard/notifier/dashboard_notifier.dart';
+ import 'package:flutter_app/screens/dashboard/ui/wish_bottom_sheet.dart';
+ import 'package:flutter_app/utils/pdf_viewer_helper.dart';
+ 
++import '../../../config/theme.dart';
++
+ class AnniversaryScreen extends ConsumerStatefulWidget {
+   const AnniversaryScreen({super.key});
+ 
+@@ -120,7 +122,8 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen> {
+     return Scaffold(
+       backgroundColor: const Color(0xFFF5F5F5),
+       appBar: AppBar(
+-        backgroundColor: Colors.white,
++        backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+         title: const Text('Anniversaries', style: TextStyle(color: Colors.black)),
+         elevation: 0,
+         iconTheme: const IconThemeData(color: Colors.black),
+diff --git a/lib/screens/dashboard/ui/birthday_screen.dart b/lib/screens/dashboard/ui/birthday_screen.dart
+index a38aa9c..fb6c0b6 100644
+--- a/lib/screens/dashboard/ui/birthday_screen.dart
++++ b/lib/screens/dashboard/ui/birthday_screen.dart
+@@ -121,7 +121,8 @@ class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
+     return Scaffold(
+       backgroundColor: AppTheme.backgroundGrey,
+       appBar: AppBar(
+-        backgroundColor: Colors.white,
++        backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+         title: const Text('Birthdays', style: TextStyle(color: Colors.black)),
+         elevation: 0,
+         iconTheme: const IconThemeData(color: Colors.black),
+diff --git a/lib/screens/dashboard/ui/dashboard_screen.dart b/lib/screens/dashboard/ui/dashboard_screen.dart
+index 32e3916..d61fb82 100644
+--- a/lib/screens/dashboard/ui/dashboard_screen.dart
++++ b/lib/screens/dashboard/ui/dashboard_screen.dart
+@@ -55,7 +55,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+       body: Column(
+         children: [
+           Container(
+-            color: AppTheme.ssjsSecondaryBlue,
++            color: AppTheme.secondaryBlue,
+             child: SafeArea(
+               bottom: false,
+               child: Padding(
+@@ -435,9 +435,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+             Container(
+               padding: const EdgeInsets.all(8),
+               decoration: BoxDecoration(
+-                gradient: const LinearGradient(
+-                  colors: [Color(0xFF4DA6FF), Color(0xFF1E90FF)],
+-                ),
++                color: AppTheme.backgroundWhite,
+                 borderRadius: BorderRadius.circular(12),
+               ),
+               child: const Icon(Icons.notifications, color: Colors.white),
+@@ -731,20 +729,12 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
+                   borderRadius: BorderRadius.circular(20),
+                   boxShadow: [
+                     BoxShadow(
+-                      color: Colors.blue.withValues(alpha: 0.3),
++                      color: Colors.black.withOpacity(0.05),
+                       blurRadius: 8,
+                       offset: const Offset(0, 4),
+                     ),
+                   ],
+-                  gradient: const LinearGradient(
+-                    begin: Alignment.topLeft,
+-                    end: Alignment.bottomRight,
+-                    colors: [
+-                      Color(0xFF4DA6FF),
+-                      Color(0xFF1E90FF),
+-                      Color(0xFF1873CC),
+-                    ],
+-                  ),
++                  color: AppTheme.backgroundWhite,
+                 ),
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+@@ -1019,7 +1009,7 @@ class _RunningNewsTickerState extends ConsumerState<RunningNewsTicker>
+                         vertical: 4,
+                       ),
+                       decoration: BoxDecoration(
+-                        color: AppTheme.ssjsSecondaryBlue,
++                        color: AppTheme.secondaryBlue,
+                         // Changed to match your theme
+                         borderRadius: BorderRadius.circular(4),
+                       ),
+diff --git a/lib/screens/events/ui/events_screen.dart b/lib/screens/events/ui/events_screen.dart
+index b41c0aa..af7fea4 100644
+--- a/lib/screens/events/ui/events_screen.dart
++++ b/lib/screens/events/ui/events_screen.dart
+@@ -26,7 +26,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
+     final eventsState = ref.watch(eventsNotifierProvider);
+ 
+     return Scaffold(
+-      appBar: AppBar(title: const Text('Events'),backgroundColor: AppTheme.ssjsSecondaryBlue,),
++      appBar: AppBar(title: const Text('Events'),backgroundColor: AppTheme.backgroundWhite,),
+       body: SafeArea(
+         child: eventsState.isLoading  && eventsState.eventsList.isEmpty
+             ? const Center(child: CircularProgressIndicator())
+@@ -337,7 +337,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
+   Widget _fallbackImage() {
+     return Container(
+       height: 160,
+-      color: AppTheme.ssjsSecondaryBlue,
++      color: AppTheme.secondaryBlue,
+       child: const Center(
+         child: Icon(Icons.event, size: 64, color: Colors.white),
+       ),
+diff --git a/lib/screens/galllery/ui/gallery_screen.dart b/lib/screens/galllery/ui/gallery_screen.dart
+index 95b10f3..2bcc504 100644
+--- a/lib/screens/galllery/ui/gallery_screen.dart
++++ b/lib/screens/galllery/ui/gallery_screen.dart
+@@ -29,7 +29,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
+ 
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         title: const Text('Gallery'),
+       ),
+       body: SafeArea(
+diff --git a/lib/screens/galllery/ui/images_screen_view.dart b/lib/screens/galllery/ui/images_screen_view.dart
+index 521bd3d..11dbb04 100644
+--- a/lib/screens/galllery/ui/images_screen_view.dart
++++ b/lib/screens/galllery/ui/images_screen_view.dart
+@@ -24,7 +24,7 @@ class _ImagesScreenViewState extends ConsumerState<ImagesScreenView> {
+ 
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         title:  Text(widget.title ?? ''),
+       ),
+       body: SafeArea(
+diff --git a/lib/screens/helpline/ui/helpline_screen.dart b/lib/screens/helpline/ui/helpline_screen.dart
+index 6f802b9..d169616 100644
+--- a/lib/screens/helpline/ui/helpline_screen.dart
++++ b/lib/screens/helpline/ui/helpline_screen.dart
+@@ -27,7 +27,7 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
+ 
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         elevation: 0,
+         centerTitle: true,
+         title: const Text(
+@@ -53,7 +53,7 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
+                         margin: const EdgeInsets.only(bottom: 16),
+                         decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(20),
+-                          color: AppTheme.ssjsSecondaryBlue,
++                          color: AppTheme.secondaryBlue,
+                           boxShadow: [
+                             BoxShadow(
+                               color: Colors.blue.withOpacity(0.2),
+@@ -98,12 +98,12 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
+                                       shape: const RoundedRectangleBorder(
+                                         side: BorderSide.none,
+                                       ),
+-                                      iconColor: AppTheme.ssjsPrimaryBlue,
+-                                      collapsedIconColor: AppTheme.ssjsPrimaryBlue,
++                                      iconColor: AppTheme.primaryBlue,
++                                      collapsedIconColor: AppTheme.primaryBlue,
+                                       title: Text(
+                                         helpline.headingName,
+                                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+-                                              color: AppTheme.ssjsPrimaryBlue,
++                                              color: AppTheme.primaryBlue,
+                                               fontWeight: FontWeight.bold,
+                                             ),
+                                       ),
+@@ -207,14 +207,14 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
+               padding: const EdgeInsets.only(bottom: 3),
+               child: Row(
+                 children: [
+-                  Icon(icon, size: 18, color: AppTheme.ssjsPrimaryBlue),
++                  Icon(icon, size: 18, color: AppTheme.primaryBlue),
+                   const SizedBox(width: 12),
+                   Expanded(
+                     child: Text(
+                       value,
+                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                             fontWeight: FontWeight.w600,
+-                            color: AppTheme.ssjsPrimaryBlue,
++                            color: AppTheme.primaryBlue,
+                           ),
+                     ),
+                   ),
+@@ -227,7 +227,7 @@ class _HelplineScreenState extends ConsumerState<HelplineScreen> {
+                               : (isWhatsapp ? Icons.chat : Icons.phone_in_talk)),
+                       size: 20,
+                     ),
+-                    color: AppTheme.ssjsPrimaryBlue,
++                    color: AppTheme.primaryBlue,
+                     onPressed: () {
+                       if (isEmail) {
+                         _launchUrl('mailto:$value');
+diff --git a/lib/screens/helpline_screen.dart b/lib/screens/helpline_screen.dart
+index b7c1d63..faa5b2d 100644
+--- a/lib/screens/helpline_screen.dart
++++ b/lib/screens/helpline_screen.dart
+@@ -8,7 +8,7 @@ class HelplineScreen extends StatelessWidget {
+   Widget build(BuildContext context) {
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor:AppTheme.ssjsSecondaryBlue,
++        backgroundColor:AppTheme.secondaryBlue,
+         title: const Text('HelpLine'),
+       ),
+       body: SafeArea(
+diff --git a/lib/screens/home_screen.dart b/lib/screens/home_screen.dart
+index b640ff7..d30b8fe 100644
+--- a/lib/screens/home_screen.dart
++++ b/lib/screens/home_screen.dart
+@@ -54,15 +54,15 @@ class _HomeScreenState extends State<HomeScreen> {
+                 });
+               },
+               type: BottomNavigationBarType.fixed,
+-              backgroundColor: AppTheme.ssjsPrimaryBlue,
+-              selectedItemColor: Colors.white,
+-              unselectedItemColor: Colors.grey,
++              backgroundColor: AppTheme.backgroundWhite,
++              selectedItemColor: AppTheme.primaryBlue,
++              unselectedItemColor: AppTheme.textGrey,
+               showUnselectedLabels: true,
+               selectedFontSize: 12,
+               unselectedFontSize: 12,
+               selectedLabelStyle: const TextStyle(
+                 fontWeight: FontWeight.w600,
+-                color: Colors.white
++                color: AppTheme.primaryBlue
+               ),
+               elevation: 0,
+               items: [
+@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
+                         ? Container(
+                             padding: const EdgeInsets.all(8),
+                             decoration: const BoxDecoration(
+-                              color: Colors.white,
++                              color: AppTheme.primaryBlue,
+                               shape: BoxShape.circle,
+                             ),
+                             child: RiveAnimatedIcon(
+@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
+                               riveIcon: RiveIcon.home,
+                               width: 24,
+                               height: 24,
+-                              color: AppTheme.ssjsSecondaryBlue,
++                              color: AppTheme.secondaryBlue,
+                               loopAnimation: true,
+                             ),
+                           )
+diff --git a/lib/screens/matrimoney/ui/matrimoney_details.dart b/lib/screens/matrimoney/ui/matrimoney_details.dart
+index c51925c..b50c311 100644
+--- a/lib/screens/matrimoney/ui/matrimoney_details.dart
++++ b/lib/screens/matrimoney/ui/matrimoney_details.dart
+@@ -36,7 +36,8 @@ class MatrimoneyDetailScreen extends StatelessWidget {
+           SliverAppBar(
+             expandedHeight: 280,
+             pinned: true,
+-            backgroundColor: AppTheme.primaryBlue,
++            backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+             iconTheme: const IconThemeData(color: Colors.white),
+             flexibleSpace: FlexibleSpaceBar(
+               background: Stack(
+diff --git a/lib/screens/matrimoney/ui/matrimony_screen.dart b/lib/screens/matrimoney/ui/matrimony_screen.dart
+index 5633a53..ee977df 100644
+--- a/lib/screens/matrimoney/ui/matrimony_screen.dart
++++ b/lib/screens/matrimoney/ui/matrimony_screen.dart
+@@ -66,7 +66,8 @@ class _MatrimoneyScreenState extends ConsumerState<MatrimoneyScreen>
+ 
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.secondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+         title: const Text('Matrimony'),
+         elevation: 0,
+       ),
+@@ -167,7 +168,8 @@ class _MatrimoneyScreenState extends ConsumerState<MatrimoneyScreen>
+                         'Age: ${_ageRange.start.round()} - ${_ageRange.end.round()}',
+                         style: const TextStyle(fontSize: 12, color: Colors.white),
+                       ),
+-                      backgroundColor: AppTheme.secondaryBlue,
++                      backgroundColor: AppTheme.backgroundWhite,
++        // backgroundColor: AppTheme.backgroundWhite,
+                       deleteIcon: const Icon(Icons.close, size: 16, color: Colors.white),
+                       onDeleted: () {
+                         setState(() {
+@@ -610,8 +612,9 @@ class _MatrimoneyScreenState extends ConsumerState<MatrimoneyScreen>
+                       Expanded(
+                         child: ElevatedButton(
+                           style: ElevatedButton.styleFrom(
+-                            backgroundColor: AppTheme.secondaryBlue,
+-                            foregroundColor: Colors.white,
++                            backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
++                            // foregroundColor: Colors.white,
+                           ),
+                           onPressed: () {
+                             setState(() {
+diff --git a/lib/screens/member_detail_screen.dart b/lib/screens/member_detail_screen.dart
+index d2e48ad..7b97da5 100644
+--- a/lib/screens/member_detail_screen.dart
++++ b/lib/screens/member_detail_screen.dart
+@@ -16,7 +16,8 @@ class MemberDetailScreen extends StatelessWidget {
+     return Scaffold(
+       appBar: AppBar(
+         title: Text(member.name),
+-        backgroundColor: Colors.white,
++        backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+         // actions: [
+         //   IconButton(
+         //     icon: const Icon(Icons.edit),
+diff --git a/lib/screens/members/ui/members_screen.dart b/lib/screens/members/ui/members_screen.dart
+index 724f1a6..cf5620e 100644
+--- a/lib/screens/members/ui/members_screen.dart
++++ b/lib/screens/members/ui/members_screen.dart
+@@ -53,7 +53,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
+   Widget build(BuildContext context) {
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         title: const Text('Members'),
+         elevation: 0,
+         actions: [
+diff --git a/lib/screens/news/ui/news_screen.dart b/lib/screens/news/ui/news_screen.dart
+index 8eccee6..f6d409a 100644
+--- a/lib/screens/news/ui/news_screen.dart
++++ b/lib/screens/news/ui/news_screen.dart
+@@ -28,7 +28,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
+ 
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         title: const Text('News'),
+       ),
+       body: SafeArea(
+diff --git a/lib/screens/notice/ui/notice_screen.dart b/lib/screens/notice/ui/notice_screen.dart
+index a2ced81..1a0b199 100644
+--- a/lib/screens/notice/ui/notice_screen.dart
++++ b/lib/screens/notice/ui/notice_screen.dart
+@@ -28,7 +28,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen> {
+ 
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         title: const Text('Notices'),
+       ),
+       body: SafeArea(
+diff --git a/lib/screens/notification/ui/notifications_screen.dart b/lib/screens/notification/ui/notifications_screen.dart
+index cb68cb8..a8a925e 100644
+--- a/lib/screens/notification/ui/notifications_screen.dart
++++ b/lib/screens/notification/ui/notifications_screen.dart
+@@ -61,8 +61,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
+     return Scaffold(
+       appBar: AppBar(
+         title: const Text('Notifications'),
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
+-        foregroundColor: AppTheme.backgroundWhite,
++        backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+       ),
+       body: SafeArea(
+         child: ListView(
+diff --git a/lib/screens/profile/ui/family_details_screen.dart b/lib/screens/profile/ui/family_details_screen.dart
+index 3f116ff..45a2c97 100644
+--- a/lib/screens/profile/ui/family_details_screen.dart
++++ b/lib/screens/profile/ui/family_details_screen.dart
+@@ -75,14 +75,11 @@ class _FamilyDetailsScreenState extends ConsumerState<FamilyDetailsScreen> {
+     final familyMembers = profileState.familyMember ?? [];
+ 
+     return Scaffold(
+-      // backgroundColor: AppTheme.primaryBlue,
++      // backgroundColor: AppTheme.backgroundWhite,
+       appBar: AppBar(
+-        leading: IconButton(onPressed: (){
+-          Get.back();
+-        }, icon: Icon(Icons.arrow_back_ios,color: Colors.black,)),
+         title: const Text('Family Details'),
+-        backgroundColor:Colors.white,
+-        foregroundColor: AppTheme.backgroundWhite,
++        backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+         actions: [
+           IconButton(
+             icon: const Icon(Icons.add),
+@@ -199,7 +196,7 @@ class _FamilyDetailsScreenState extends ConsumerState<FamilyDetailsScreen> {
+       ),
+       floatingActionButton: FloatingActionButton(
+         onPressed: _addFamilyMember,
+-        backgroundColor: AppTheme.primaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         child: const Icon(Icons.add),
+       ),
+     );
+@@ -769,7 +766,7 @@ class _AddFamilyMemberDialogState extends State<_AddFamilyMemberDialog> {
+                               icon: const Icon(Icons.picture_as_pdf, size: 18),
+                               label: const Text('Pick PDF'),
+                               style: ElevatedButton.styleFrom(
+-                                backgroundColor: AppTheme.secondaryBlue,
++                                backgroundColor: AppTheme.backgroundWhite,
+                                 foregroundColor: Colors.white,
+                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                               ),
+@@ -797,7 +794,7 @@ class _AddFamilyMemberDialogState extends State<_AddFamilyMemberDialog> {
+                   Expanded(
+                     child: ElevatedButton(
+                       style: ElevatedButton.styleFrom(
+-                        backgroundColor: AppTheme.primaryBlue,
++                        backgroundColor: AppTheme.backgroundWhite,
+                         foregroundColor: Colors.white,
+                       ),
+                       onPressed: () {
+@@ -908,7 +905,8 @@ class FamilyMemberDetailScreen extends StatelessWidget {
+     return Scaffold(
+       appBar: AppBar(
+         title: Text(member.name),
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+       ),
+       body: SingleChildScrollView(
+         padding: const EdgeInsets.all(16.0),
+diff --git a/lib/screens/profile/ui/profile_screen.dart b/lib/screens/profile/ui/profile_screen.dart
+index 5c294e3..82b9ebd 100644
+--- a/lib/screens/profile/ui/profile_screen.dart
++++ b/lib/screens/profile/ui/profile_screen.dart
+@@ -38,7 +38,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+     final profile = profileState.profile;
+     return Scaffold(
+       appBar: AppBar(
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
++        backgroundColor: AppTheme.backgroundWhite,
+         title: const Text('Profile'),
+         actions: [
+           if (profile != null)
+diff --git a/lib/screens/settings/business_information_screen.dart b/lib/screens/settings/business_information_screen.dart
+index 8a45587..b70684c 100644
+--- a/lib/screens/settings/business_information_screen.dart
++++ b/lib/screens/settings/business_information_screen.dart
+@@ -104,7 +104,7 @@ class _BusinessInformationScreenState extends State<BusinessInformationScreen> {
+       appBar: AppBar(
+         title: const Text('Business Information'),
+         backgroundColor: AppTheme.primaryBlue,
+-        foregroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+       ),
+       body: SafeArea(
+         child: SingleChildScrollView(
+@@ -203,7 +203,7 @@ class _BusinessInformationScreenState extends State<BusinessInformationScreen> {
+                       },
+                       style: ElevatedButton.styleFrom(
+                         backgroundColor: AppTheme.primaryBlue,
+-                        foregroundColor: AppTheme.backgroundWhite,
++                        foregroundColor: AppTheme.textDark,
+                         shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.circular(8),
+                         ),
+diff --git a/lib/screens/settings/help_support/ui/help_support_screen.dart b/lib/screens/settings/help_support/ui/help_support_screen.dart
+index 040a783..09c212f 100644
+--- a/lib/screens/settings/help_support/ui/help_support_screen.dart
++++ b/lib/screens/settings/help_support/ui/help_support_screen.dart
+@@ -24,8 +24,8 @@ class _HelpSupportScreenState extends ConsumerState<HelpSupportScreen> {
+     return Scaffold(
+       appBar: AppBar(
+         title: const Text('Help & Support'),
+-        backgroundColor: AppTheme.ssjsSecondaryBlue,
+-        foregroundColor: AppTheme.backgroundWhite,
++        backgroundColor: AppTheme.backgroundWhite,
++        foregroundColor: AppTheme.textDark,
+       ),
+       body: SafeArea(
+         child: ListView(
+diff --git a/lib/screens/settings/privacy_settings_screen.dart b/lib/screens/settings/privacy_settings_screen.dart
+index b58e4f1..68afca4 100644
+--- a/lib/screens/settings/privacy_settings_screen.dart
++++ b/lib/screens/settings/privacy_settings_screen.dart
+@@ -56,8 +56,8 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
+     return Scaffold(
+       appBar: AppBar(
+         title: const Text('Privacy Settings'),
+-        backgroundColor:AppTheme.ssjsSecondaryBlue,
+-        foregroundColor: AppTheme.backgroundWhite,
++        backgroundColor:AppTheme.secondaryBlue,
++        foregroundColor: AppTheme.textDark,
+       ),
+       body: SafeArea(
+         child: ListView(
+diff --git a/lib/screens/splash/ui/splash_screen.dart b/lib/screens/splash/ui/splash_screen.dart
+index 3534583..0d08b2f 100644
+--- a/lib/screens/splash/ui/splash_screen.dart
++++ b/lib/screens/splash/ui/splash_screen.dart
+@@ -1,4 +1,6 @@
+ import 'package:cached_network_image/cached_network_image.dart';
++import '../../../config/theme.dart';
++
+ import 'package:flutter/material.dart';
+ import 'package:flutter_app/screens/splash/riverpod/splash_notifier.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+@@ -83,15 +85,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
+   Widget _buildStaticSplash() {
+     return Container(
+       decoration: const BoxDecoration(
+-        gradient: LinearGradient(
+-          begin: Alignment.topLeft,
+-          end: Alignment.bottomRight,
+-          colors: [
+-            Color(0xFF4DA6FF), // Light DodgerBlue
+-            Color(0xFF1E90FF), // DodgerBlue (from logo)
+-            Color(0xFF1873CC), // Dark DodgerBlue
+-          ],
+-        ),
++        color: AppTheme.secondaryBlue,
+       ),
+       child: Center(
+         child: FadeTransition(

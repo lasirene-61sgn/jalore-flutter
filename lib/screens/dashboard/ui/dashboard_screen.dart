@@ -144,7 +144,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               child: Text(
                                 unreadCount.toString(),
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: AppTheme.textDark,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -435,12 +435,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF4DA6FF), Color(0xFF1E90FF)],
-                ),
+                color: AppTheme.ssjsSecondaryBlue,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.notifications, color: Colors.white),
+              child: const Icon(Icons.notifications, color: AppTheme.textDark),
             ),
             const SizedBox(width: 12),
             const Expanded(
@@ -599,7 +597,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     notification.type == "birthday_added"
                                     ? Icons.celebration
                                     : null,
-                                color: Colors.white,
+                                color: AppTheme.textDark,
                                 size: 24,
                               ),
                             ),
@@ -731,20 +729,12 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.withValues(alpha: 0.3),
+                      color: Colors.grey.withOpacity(0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
                   ],
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF4DA6FF),
-                      Color(0xFF1E90FF),
-                      Color(0xFF1873CC),
-                    ],
-                  ),
+                  color: AppTheme.ssjsSecondaryBlue,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -775,10 +765,10 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
               ),
               if (widget.badgeCount != null && widget.badgeCount! > 0)
                 Positioned(
-                  top: -8,
-                  right: -8,
+                  top: 8,
+                  right: 8,
                   child: Container(
-                    padding: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(8),
                     decoration: const BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
@@ -787,7 +777,7 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
                       widget.badgeCount.toString(),
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -1026,7 +1016,7 @@ class _RunningNewsTickerState extends ConsumerState<RunningNewsTicker>
                       child: const Text(
                         'LATEST',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: AppTheme.textDark,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                         ),

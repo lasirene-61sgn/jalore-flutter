@@ -104,7 +104,7 @@ class _BusinessInformationScreenState extends State<BusinessInformationScreen> {
       appBar: AppBar(
         title: const Text('Business Information'),
         backgroundColor: AppTheme.primaryBlue,
-        foregroundColor: AppTheme.backgroundWhite,
+        foregroundColor: AppTheme.textDark,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -203,7 +203,7 @@ class _BusinessInformationScreenState extends State<BusinessInformationScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryBlue,
-                        foregroundColor: AppTheme.backgroundWhite,
+                        foregroundColor: AppTheme.textDark,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/theme.dart';
 import 'package:flutter_app/firebase_options.dart';
@@ -14,7 +15,8 @@ import 'services/api/notification_service/notifiction_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Use DefaultFirebaseOptions here too for the background isolate
+  if (defaultTargetPlatform == TargetPlatform.iOS) return;
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -24,12 +26,17 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  // Register background handler
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // Handle Firebase initialization safely
+  if (defaultTargetPlatform != TargetPlatform.iOS) {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    } catch (e) {
+      debugPrint("Firebase initialization failed: $e");
+    }
+  }
 
   // Initialize your notification service
   await NotificationService.init();
@@ -45,10 +52,12 @@ void main() async {
   }
 
 
-  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-  if (initialMessage != null) {
-    print("App launched from terminated state via notification");
-    // You can handle redirection logic here or inside NotificationService
+  if (defaultTargetPlatform != TargetPlatform.iOS) {
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      print("App launched from terminated state via notification");
+      // You can handle redirection logic here or inside NotificationService
+    }
   }
 
   runApp(const ProviderScope(child: MyApp()));

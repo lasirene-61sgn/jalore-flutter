@@ -39,19 +39,19 @@ android {
         multiDexEnabled = true
     }
 
-//    signingConfigs {
-//        create("release") {
-//            keyAlias = keystoreProperties["keyAlias"] as String?
-//            keyPassword = keystoreProperties["keyPassword"] as String?
-//            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-//            storePassword = keystoreProperties["storePassword"] as String?
-//        }
-//    }
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String?
+        }
+    }
 
     buildTypes {
         getByName("release") {
             // ✅ This links to the release signing config above
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
 
             // Optimization
 

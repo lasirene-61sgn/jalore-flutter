@@ -39,6 +39,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
         title: const Text('Profile'),
         actions: [
           if (profile != null)
@@ -405,7 +406,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               await ref.read(loginProvider.notifier).logout();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
             ),
             child: const Text('Logout'),
           ),

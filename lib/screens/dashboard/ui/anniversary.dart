@@ -9,6 +9,8 @@ import 'package:flutter_app/screens/dashboard/notifier/dashboard_notifier.dart';
 import 'package:flutter_app/screens/dashboard/ui/wish_bottom_sheet.dart';
 import 'package:flutter_app/utils/pdf_viewer_helper.dart';
 
+import '../../../config/theme.dart';
+
 class AnniversaryScreen extends ConsumerStatefulWidget {
   const AnniversaryScreen({super.key});
 
@@ -120,7 +122,8 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppTheme.ssjsSecondaryBlue,
+        foregroundColor: AppTheme.textDark,
         title: const Text('Anniversaries', style: TextStyle(color: Colors.black)),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
