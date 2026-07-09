@@ -21,6 +21,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rive_animated_icon/rive_animated_icon.dart';
 import '../../profile/notifier/profile_notifier.dart';
 import '../../profile/ui/profile_edit_screen.dart';
+import '../../about/ui/about_us_screen.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -200,6 +201,47 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 childAspectRatio: 1.1,
                 children: [
                   MenuButton(
+                    riveIcon: RiveIcon.home,
+                    label: 'About Us',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AboutUsScreen()),
+                      );
+                    },
+                  ),
+                  MenuButton(
+                    riveIcon: RiveIcon.profile2,
+                    label: 'Committee\nMembers',
+                    badgeCount: state.counters?.newCommitteeCount,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CommitteeScreen()),
+                      );
+                    },
+                  ),
+                  MenuButton(
+                    riveIcon: RiveIcon.home2,
+                    label: 'Business\nDirectory',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const BusinessScreen()),
+                      );
+                    },
+                  ),
+                  MenuButton(
+                    riveIcon: RiveIcon.profile2,
+                    label: 'Matrimony',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MatrimoneyScreen()),
+                      );
+                    },
+                  ),
+                  MenuButton(
                     riveIcon: RiveIcon.search,
                     label: 'Find A Member',
                     badgeCount: state.counters?.newCustomerCount,
@@ -218,28 +260,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const EventsScreen()),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    riveIcon: RiveIcon.profile2,
-                    label: 'Committee\nMembers',
-                    badgeCount: state.counters?.newCommitteeCount,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const CommitteeScreen()),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    riveIcon: RiveIcon.gallery,
-                    label: 'Gallery',
-                    badgeCount: state.counters?.newGalleryCount,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const GalleryScreen()),
                       );
                     },
                   ),
@@ -270,12 +290,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     },
                   ),
                   MenuButton(
-                    riveIcon: RiveIcon.home2,
-                    label: 'Business\nDirectory',
+                    riveIcon: RiveIcon.gallery,
+                    label: 'Gallery',
+                    badgeCount: state.counters?.newGalleryCount,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const BusinessScreen()),
+                        MaterialPageRoute(builder: (context) => const GalleryScreen()),
                       );
                     },
                   ),
@@ -286,16 +307,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const HelplineScreen()),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    riveIcon: RiveIcon.profile2,
-                    label: 'Matrimony',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MatrimoneyScreen()),
                       );
                     },
                   ),

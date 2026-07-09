@@ -55,35 +55,71 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
           if (hasImage)
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-              child: Image.network(
-                event.imagePaths.first,
-                height: 160,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => _fallbackImage(),
-                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                  // 1. If loading is finished, return the actual image (child)
-                  if (loadingProgress == null) return child;
-
-                  // 2. While loading, show the progress indicator centered within the image area
-                  return Container(
-                    height: 160, // Match the image height to prevent layout jumps
-                    color: AppTheme.backgroundGrey, // Optional: light grey placeholder color
-                    child: Center(
-                      child: SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                      backgroundColor: Colors.transparent,
+                      insetPadding: const EdgeInsets.all(0),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          InteractiveViewer(
+                            panEnabled: true,
+                            minScale: 1.0,
+                            maxScale: 4.0,
+                            child: Image.network(
+                              event.imagePaths.first,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          Positioned(
+                            top: 16,
+                            right: 16,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.black54,
+                              child: IconButton(
+                                icon: const Icon(Icons.close, color: Colors.white),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 },
+                child: Image.network(
+                  event.imagePaths.first,
+                  height: 160,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => _fallbackImage(),
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    // 1. If loading is finished, return the actual image (child)
+                    if (loadingProgress == null) return child;
+
+                    // 2. While loading, show the progress indicator centered within the image area
+                    return Container(
+                      height: 160, // Match the image height to prevent layout jumps
+                      color: Colors.transparent, // Optional: light grey placeholder color
+                      child: Center(
+                        child: SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
 

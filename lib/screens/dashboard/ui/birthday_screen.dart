@@ -385,7 +385,7 @@ class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
                     const Text("Professional Info", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     if (member.occupation != null && member.occupation!.isNotEmpty) _buildDetailRow("Occupation", member.occupation!),
-                    if (member.businessType != null && member.businessType!.isNotEmpty) _buildDetailRow("Business Type", member.businessType!),
+                    if (member.businessType != null && member.businessType!.isNotEmpty) _buildDetailRow("Category", member.businessType!),
                     if (member.businessName != null && member.businessName!.isNotEmpty) _buildDetailRow("Business Name", member.businessName!),
                     if (member.msFirmName != null && member.msFirmName!.isNotEmpty) _buildDetailRow("Firm Name", member.msFirmName!),
                     if (member.productService != null && member.productService!.isNotEmpty) _buildDetailRow("Products/Services", member.productService!),

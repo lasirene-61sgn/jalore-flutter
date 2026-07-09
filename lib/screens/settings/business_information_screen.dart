@@ -124,18 +124,18 @@ class _BusinessInformationScreenState extends State<BusinessInformationScreen> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Business Type
+                  // Category
                   TextFormField(
                     controller: _businessTypeController,
                     decoration: const InputDecoration(
-                      labelText: 'Business Type',
+                      labelText: 'Category',
                       hintText: 'e.g., Textiles, Manufacturing, Services',
                       prefixIcon: Icon(Icons.business_center),
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter business type';
+                        return 'Please enter category';
                       }
                       return null;
                     },

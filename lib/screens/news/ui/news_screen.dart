@@ -77,7 +77,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
           Container(
             height: 160,
             decoration: BoxDecoration(
-              color: AppTheme.primaryBlue,
+              color: Colors.transparent,
               borderRadius:
               const BorderRadius.vertical(top: Radius.circular(8)),
             ),

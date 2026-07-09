@@ -177,7 +177,7 @@ class MemberDetailScreen extends StatelessWidget {
                   title: 'Business Information',
                   children: [
                     if (member.businessType != null)
-                      _buildInfoRow(context, 'Business Type', member.businessType!, Icons.business),
+                      _buildInfoRow(context, 'Category', member.businessType!, Icons.business),
                     if (member.productService != null)
                       _buildInfoRow(context, 'Products/Services', member.productService!, Icons.inventory),
                   ],

@@ -6,6 +6,7 @@ import 'news/ui/news_screen.dart';
 import 'notice/ui/notice_screen.dart';
 import 'galllery/ui/gallery_screen.dart';
 import 'profile/ui/profile_screen.dart';
+import 'package:upgrader/upgrader.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,18 +28,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: _currentIndex == 0,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        if (_currentIndex != 0) {
-          setState(() {
-            _currentIndex = 0;
-          });
-        }
-      },
-      child: Scaffold(
-        body: _screens[_currentIndex],
+    return UpgradeAlert(
+      upgrader: Upgrader(
+        // Optional configuration can be added here
+      ),
+      child: PopScope(
+        canPop: _currentIndex == 0,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          if (_currentIndex != 0) {
+            setState(() {
+              _currentIndex = 0;
+            });
+          }
+        },
+        child: Scaffold(
+          body: _screens[_currentIndex],
         bottomNavigationBar: SafeArea(
           child: Container(
             height: 70,
@@ -151,7 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
-    );
+      ), // closes Scaffold
+      ), // closes PopScope
+    ); // closes UpgradeAlert
   }
 }

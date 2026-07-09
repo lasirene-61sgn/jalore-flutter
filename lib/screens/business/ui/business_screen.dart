@@ -108,7 +108,7 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.backgroundWhite,
+        backgroundColor: AppTheme.secondaryBlue,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
@@ -364,7 +364,7 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.category, size: 14, color: Colors.grey[600]),
+                        Icon(Icons.person, size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
@@ -417,8 +417,8 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                business.businessType,
-                style: const TextStyle(fontSize: 18),
+                business.msFirmName,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -429,7 +429,7 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildDetailRow(Icons.person, 'Owner', business.owner),
-              _buildDetailRow(Icons.category, 'Category', business.msFirmName),
+              _buildDetailRow(Icons.category, 'Category', business.businessType),
               _buildDetailRow(Icons.phone, 'Phone', business.mobile),
               _buildDetailRow(Icons.location_on, 'Address', business.officeAddress),
               const SizedBox(height: 12),

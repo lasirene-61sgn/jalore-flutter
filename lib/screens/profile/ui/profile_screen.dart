@@ -306,7 +306,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         _buildProfileOption(
                           context,
                           icon: Icons.info,
-                          title: 'About App',
+                          title: 'About Us',
                           onTap: () {
                             _showAboutDialog(context);
                           },
@@ -420,7 +420,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('About App'),
+        title: const Text('About Us'),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

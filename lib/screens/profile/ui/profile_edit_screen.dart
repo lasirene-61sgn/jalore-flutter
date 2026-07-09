@@ -471,7 +471,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                 TextFormField(
                   controller: _businessTypeController,
                   decoration: const InputDecoration(
-                    labelText: 'Business Type',
+                    labelText: 'Category',
                     prefixIcon: Icon(Icons.store),
                   ),
                 ),

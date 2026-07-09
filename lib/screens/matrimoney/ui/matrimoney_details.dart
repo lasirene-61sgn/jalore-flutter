@@ -366,7 +366,7 @@ class MatrimoneyDetailScreen extends StatelessWidget {
                       _buildRowData(context, 'Hobbies', matrimoney.hobbies),
                       _buildRowData(context, 'Occupation', matrimoney.occupation),
                       _buildRowData(context, 'Business Name', matrimoney.businessName),
-                      _buildRowData(context, 'Business Type', matrimoney.businessType),
+                      _buildRowData(context, 'Category', matrimoney.businessType),
                       _buildRowData(context, 'Product / Service', matrimoney.productService),
                       _buildRowData(context, 'Office Address', matrimoney.officeAddress),
                     ],
